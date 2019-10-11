@@ -10,17 +10,42 @@ import java.io.IOException;
 import java.util.*;
 import java.lang.StringBuilder;
 
+import java.util.Scanner;
+
 public class MasterNode {
 
 	// Store generated typos here
 	LinkedList<String> typos;
 
+	// User input
+	String input;
+
 	public MasterNode() {
 		// Initialize typos queue
 		typos = new LinkedList<String>();
 
+		// Get user input
+		input = getAddress();
+
+		// Generate typos
+		getTypo1(input);
+		getTypo2(input);
+		getTypo3(input);
+		
+
 		// Debug
 		System.out.println(typos);
+	}
+
+	public String getAddress() {
+		// Initialize scanner
+		Scanner sc = new Scanner(System.in);
+
+		// Ask user for input
+		System.out.print("Enter Address: ");
+
+		// Pass the input to getTypo3
+		return sc.nextLine();
 	}
 
 	// June
