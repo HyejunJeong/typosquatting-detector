@@ -1,4 +1,3 @@
-package typoGeneration;
 
 import java.util.Scanner;
 

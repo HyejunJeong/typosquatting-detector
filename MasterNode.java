@@ -10,12 +10,55 @@ import java.lang.StringBuilder;
 
 public class MasterNode {
 
-	// Name
+	// June
 	// Typo Type 1
+	public void getTypo1(String input) {
+		String typoURL = null;
+
+		boolean containsWww = input.startsWith("www.");
+		
+		LinkedList<String> typoList = new LinkedList<>();
+
+		if(containsWww) {
+			int indexOfDot = input.indexOf('.');
+			//typoURL = url.replace(".", "");
+			typoURL = input.substring(0, indexOfDot);
+			typoURL += input.substring(indexOfDot+1);
+			typoList.add(typoURL);
+		}
+	}
 	
 
-	// Name
+	// June
 	// Typo Type 2
+	public void getTypo2(String input) {
+		int lengthOfURL = input.length();
+		boolean containsWww = input.startsWith("www.");
+		
+		LinkedList<String> typoList = new LinkedList<>();
+		
+		String typoURL = "";
+		int index = 0;
+		
+		while(index != lengthOfURL) {
+			if(containsWww && (index == 0)) 
+				index = index + 2;
+			if(index < lengthOfURL-2 && input.charAt(index) == input.charAt(index+1)) 
+				index ++;
+			if(input.charAt(index) == '.') 
+				index ++;
+			
+			typoURL = input.substring(0, index);
+			typoURL += input.substring(index+1);
+			
+			typoList.add(typoURL);
+			//System.out.println("[" + typoList.size() + "] " + typoURL);
+			//System.out.println(typoList.size());
+			index ++;
+		}
+		//System.out.println("typolist.size(): " + typoList.size());
+
+	}
 
 
 	// Jay Moon
@@ -44,6 +87,7 @@ public class MasterNode {
 			// Else do not do anything and continue loop
 
 		}
+	}
 
 		// Name
 		// Typo Type 4
