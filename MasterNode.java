@@ -83,7 +83,7 @@ public class MasterNode {
 			return typos;
 		}
 
-		public static Map<String, String[]> adjacentMap(String filename) {
+		public static Map<String, String[]> adjacentMap(String filename){
 			JSONParser parser = new JSONParser();
 			JSONObject o;
 			JSONArray jsonChars;
@@ -94,23 +94,24 @@ public class MasterNode {
 				obj = (org.json.simple.JSONObject) parser.parse(new FileReader(filename));
 				arr = (org.json.simple.JSONArray) obj.get("keys");
 				Iterator i = arr.iterator();
-				while(i.hasNext()) {
+				while (i.hasNext()) {
 					o = (JSONObject) i.next();
 					jsonChars = (JSONArray) o.get("adjacent");
-					String [] chars = new String[jsonChars.size()];
-					for(int j = 0; j < jsonChars.size(); j++) {
+					String[] chars = new String[jsonChars.size()];
+					for (int j = 0; j < jsonChars.size(); j++) {
 						chars[j] = (String) jsonChars.get(j);
 					}
 					map.put((String) o.get("key"), chars);
 				}
-			} catch(java.io.FileNotFoundException e) {
+			} catch (java.io.FileNotFoundException e) {
 				e.printStackTrace();
-			} catch(java.io.IOException e) {
+			} catch (java.io.IOException e) {
 				e.printStackTrace();
-			} catch(org.json.simple.parser.ParseException e) {
+			} catch (org.json.simple.parser.ParseException e) {
 				e.printStackTrace();
 			}
 			return map;
+		}
 
-	
+		
 }
