@@ -90,12 +90,8 @@ public class MasterNode {
 		}
 	}
 
-	// Name
-	// Typo Type 4
-
-
 	// Henry Crain
-	// Typo Type 5
+	// Typo Type 4
 	private void characterReplacement(String url) {
 		Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
 
@@ -112,6 +108,10 @@ public class MasterNode {
 		}
 	}
 
+
+	// Nick Reimer
+	// Typo Type 5
+	
 	public void characterInsertion(String url, Map<String, String[]> map) {
 		int i = 0;
 		int j;
