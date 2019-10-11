@@ -30,14 +30,11 @@ public class MasterNode {
 
 		boolean containsWww = input.startsWith("www.");
 		
-		LinkedList<String> typoList = new LinkedList<>();
-
 		if(containsWww) {
 			int indexOfDot = input.indexOf('.');
-			//typoURL = url.replace(".", "");
 			typoURL = input.substring(0, indexOfDot);
 			typoURL += input.substring(indexOfDot+1);
-			typoList.add(typoURL);
+			typos.add(typoURL);
 		}
 	}
 	
@@ -47,9 +44,7 @@ public class MasterNode {
 	public void getTypo2(String input) {
 		int lengthOfURL = input.length();
 		boolean containsWww = input.startsWith("www.");
-		
-		LinkedList<String> typoList = new LinkedList<>();
-		
+				
 		String typoURL = "";
 		int index = 0;
 		
@@ -64,13 +59,9 @@ public class MasterNode {
 			typoURL = input.substring(0, index);
 			typoURL += input.substring(index+1);
 			
-			typoList.add(typoURL);
-			//System.out.println("[" + typoList.size() + "] " + typoURL);
-			//System.out.println(typoList.size());
+			typos.add(typoURL);
 			index ++;
 		}
-		//System.out.println("typolist.size(): " + typoList.size());
-
 	}
 
 
