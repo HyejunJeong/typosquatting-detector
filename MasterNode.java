@@ -52,7 +52,7 @@ public class MasterNode {
 		// Nick Reimer
 		// Typo Type 5
 		//Part 5
-		public static ArrayList<String> generateTypo(String url, Map<String, String[]> map) {
+		public ArrayList<String> generateTypo(String url, Map<String, String[]> map) {
 			int i = 0;
 			int j;
 			List<String> list = new ArrayList<String>();
@@ -83,7 +83,7 @@ public class MasterNode {
 			return typos;
 		}
 
-		public static Map<String, String[]> adjacentMap(String filename){
+		public Map<String, String[]> adjacentMap(String filename){
 			JSONParser parser = new JSONParser();
 			JSONObject o;
 			JSONArray jsonChars;
@@ -113,5 +113,5 @@ public class MasterNode {
 			return map;
 		}
 
-		
+
 }
