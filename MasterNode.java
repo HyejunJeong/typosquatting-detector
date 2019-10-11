@@ -28,16 +28,16 @@ public class MasterNode {
 		LinkedList<String> typos = new LinkedList<String>();
 
 		// Iterate through input string and generate typos
-		for (int i = 0; i < input.length() - 1; i++) {
+		for(int i = 0; i < input.length()-1; i++) {
 			char currChar = input.charAt(i);
-			char nextChar = input.charAt(i + 1);
+			char nextChar = input.charAt(i+1);
 
 			// If two characters are not same
-			if (currChar != nextChar) {
+			if(currChar != nextChar) {
 				// Initialize new string to swap characters
 				StringBuilder sb = new StringBuilder(input);
 				sb.setCharAt(i, nextChar);
-				sb.setCharAt(i + 1, currChar);
+				sb.setCharAt(i+1, currChar);
 
 				// Add new typo to the list
 				typos.add(sb.toString());
