@@ -32,7 +32,7 @@ public class MasterNode {
 		getTypo2(input);
 		getTypo3(input);
 		characterReplacement(input);
-		characterInsertion((input);
+		characterInsertion(input);
 
 		// Debug
 		System.out.println(typos);
