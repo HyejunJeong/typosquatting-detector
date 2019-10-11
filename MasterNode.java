@@ -105,8 +105,7 @@ public class MasterNode {
 
 	// Henry Crain
 	// Typo Type 5
-	private List<String> characterReplacement(String url) {
-		List<String> typos = new ArrayList<>();
+	private void characterReplacement(String url) {
 		Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
 
 		for (int i = 0; i < url.length(); i++) {
@@ -120,8 +119,6 @@ public class MasterNode {
 				typos.add(typoUrl.toString());
 			}
 		}
-
-		return typos;
 	}
 
 	private Map<String, String[]> adjacentMap(String filename) {
