@@ -32,6 +32,7 @@ public class MasterNode {
 		getTypo2(input);
 		getTypo3(input);
 		characterReplacement(input);
+		characterInsertion((input);
 
 		// Debug
 		System.out.println(typos);
@@ -136,7 +137,8 @@ public class MasterNode {
 
 	// Nick Reimer
 	// Typo Type 5
-	public void characterInsertion(String url, Map<String, String[]> map) {
+	public void characterInsertion(String url) {
+		Map<String, String[]> map = adjacentMap("Adjacent.json");
 		int i = 0;
 		int j;
 		List<String> list = new ArrayList<String>();
