@@ -12,6 +12,17 @@ import java.lang.StringBuilder;
 
 public class MasterNode {
 
+	// Store generated typos here
+	LinkedList<String> typos;
+
+	public MasterNode() {
+		// Initialize typos queue
+		typos = new LinkedList<String>();
+
+		// Debug
+		System.out.println(typos);
+	}
+
 	// June
 	// Typo Type 1
 	public void getTypo1(String input) {
@@ -66,9 +77,6 @@ public class MasterNode {
 	// Jay Moon
 	// Typo Type 3
 	public void getTypo3(String input) {
-
-		// Store generated typos here
-		LinkedList<String> typos = new LinkedList<String>();
 
 		// Iterate through input string and generate typos
 		for(int i = 0; i < input.length()-1; i++) {
