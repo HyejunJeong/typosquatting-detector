@@ -43,11 +43,6 @@ public class MasterNode {
 //		// Pass the input to getTypo3
 //		return sc.nextLine();
 //	}
-//	
-//	// Debug
-//	public void foo() {
-//		System.out.println("foo");
-//	}
 
 	// Type 1 Typos
 	// June Jeong
@@ -162,29 +157,29 @@ public class MasterNode {
 //			i++;
 //		}
 //	}
-//
-//	private Map<String, String[]> adjacentMap(String filename) {
-//		JSONParser parser = new JSONParser();
-//		Map<String, String[]> map = new HashMap<>();
-//
-//		try {
-//			JSONObject obj = (JSONObject) parser.parse(new FileReader(filename));
-//			JSONArray arr = (JSONArray) obj.get("keys");
-//
-//			for (Object value : arr) {
-//				JSONObject o = (JSONObject) value;
-//				JSONArray jsonChars = (JSONArray) o.get("adjacent");
-//				String[] chars = new String[jsonChars.size()];
-//				for (int j = 0; j < jsonChars.size(); j++) {
-//					chars[j] = (String) jsonChars.get(j);
-//				}
-//				map.put((String) o.get("key"), chars);
-//			}
-//		} catch(IOException | ParseException e) {
-//			e.printStackTrace();
-//		}
-//		return map;
-//	}
+
+	private Map<String, String[]> adjacentMap(String filename) {
+		JSONParser parser = new JSONParser();
+		Map<String, String[]> map = new HashMap<>();
+
+		try {
+			JSONObject obj = (JSONObject) parser.parse(new FileReader(filename));
+			JSONArray arr = (JSONArray) obj.get("keys");
+
+			for (Object value : arr) {
+				JSONObject o = (JSONObject) value;
+				JSONArray jsonChars = (JSONArray) o.get("adjacent");
+				String[] chars = new String[jsonChars.size()];
+				for (int j = 0; j < jsonChars.size(); j++) {
+					chars[j] = (String) jsonChars.get(j);
+				}
+				map.put((String) o.get("key"), chars);
+			}
+		} catch(IOException | ParseException e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
 	
 	public String getTypos() {
 		return typos.toString();
