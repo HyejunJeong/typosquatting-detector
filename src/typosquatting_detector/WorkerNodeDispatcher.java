@@ -1,3 +1,5 @@
+package typosquatting_detector;
+
 import java.util.*;
 
 public class WorkerNodeDispatcher {
