@@ -1,4 +1,13 @@
+# macOS
 .DS_Store
+
+# Eclipse
 .project
 .classpath
 .settings/
+
+# IntelliJ
+*.iml
+*.iws
+*.ipr
+.idea/
