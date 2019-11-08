@@ -5,19 +5,19 @@ import java.util.*;
 public class WorkerNodeDispatcher {
 
     private static final int NUM_WORKERS = 10;
-    private final Queue<WorkerNode> workers;
+    private final Queue<ClientWorkImpl> workers;
 
     public WorkerNodeDispatcher() {
         workers = new LinkedList<>();
 
         for (int i = 0; i < NUM_WORKERS; i++) {
-            workers.add(new WorkerNode(workers));
+            workers.add(new ClientWorkImpl(workers));
         }
     }
 
     public void dispatch(List<String> urls) throws InterruptedException {
         for (String url: urls) {
-            WorkerNode worker;
+            ClientWorkImpl worker;
             synchronized (workers) {
                 if (workers.isEmpty()) {
                     workers.wait();
