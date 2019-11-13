@@ -16,7 +16,7 @@ TBA
 
 ## Authors
 
-**Henry Crain** - add yours here
-**Hye-Jun Jeong** - add yours here
-**Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
-**Nicholas Reimer** - add yours here
+* **Henry Crain** - add yours here
+* **Hye-Jun Jeong** - add yours here
+* **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
+* **Nicholas Reimer** - add yours here
