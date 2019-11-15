@@ -1,61 +1,68 @@
 package typosquatting_detector;
 
+import java.rmi.registry.LocateRegistry;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.lang.StringBuilder;
-
 public class Server {
-	
+
+	// Store generated typos here
 	LinkedList<String> typos;
 	
-	public Server(String url) throws NotBoundException, Exception {
-		// Debug
-		System.out.println("hi from server's scan");
+	public Server() {}
+
+	public Server(String input) throws Exception {
+		// Initialize typos queue
+		this.typos = new LinkedList<String>();
+
+		// Generate typos
+		getType1Typos(input);
+		getType2Typos(input);
+		getType3Typos(input);
+		//getType4Typos(input);
+		//getType5Typos(input);
 		
-		// Store generated typos here
-		typos = new LinkedList<String>();
-		
-		// Generate all five types of typos
-		getTyposType1(url);
-		getTyposType2(url);
-		getTyposType3(url);
-//		getTyposType4(url);
-//		getTyposType5(url);
-		
-		// Assign work to clients
-		Service tester = new Service();
+		Service tester = new Service(createMessage());
 		Naming.rebind("Test", tester);
 		Client client = new Client();
 		client.go();
 	}
+	
+	public String createMessage() {
+		String message = "";
+		while(!this.typos.isEmpty()) {
+			message = message + this.typos.pop() + " ";
+		}
+		return message;
+	}
 
 	// Type 1 Typos
 	// June Jeong
-	private void getTyposType1(String url) {
+	public void getType1Typos(String input) {
 		String typoURL = null;
 
-		boolean containsWww = url.startsWith("www.");
+		boolean containsWww = input.startsWith("www.");
 		
 		if(containsWww) {
-			int indexOfDot = url.indexOf('.');
-			typoURL = url.substring(0, indexOfDot);
-			typoURL += url.substring(indexOfDot+1);
+			int indexOfDot = input.indexOf('.');
+			typoURL = input.substring(0, indexOfDot);
+			typoURL += input.substring(indexOfDot+1);
 			typos.add(typoURL);
 		}
 	}
 	
 	// Type 2 Typos
 	// June Jeong
-	private void getTyposType2(String url) {
-		int lengthOfURL = url.length();
-		boolean containsWww = url.startsWith("www.");
+	public void getType2Typos(String input) {
+		int lengthOfURL = input.length();
+		boolean containsWww = input.startsWith("www.");
 				
 		String typoURL = "";
 		int index = 0;
@@ -63,13 +70,13 @@ public class Server {
 		while(index != lengthOfURL) {
 			if(containsWww && (index == 0)) 
 				index = index + 2;
-			if(index < lengthOfURL-2 && url.charAt(index) == url.charAt(index+1)) 
+			if(index < lengthOfURL-2 && input.charAt(index) == input.charAt(index+1)) 
 				index ++;
-			if(url.charAt(index) == '.') 
+			if(input.charAt(index) == '.') 
 				index ++;
 			
-			typoURL = url.substring(0, index);
-			typoURL += url.substring(index+1);
+			typoURL = input.substring(0, index);
+			typoURL += input.substring(index+1);
 			
 			typos.add(typoURL);
 			index ++;
@@ -78,30 +85,31 @@ public class Server {
 
 	// Type 3 Typos
 	// Jay Moon
-	private void getTyposType3(String url) {
+	public void getType3Typos(String input) {
 
 		// Iterate through input string and generate typos
-		for(int i = 0; i < url.length()-1; i++) {
-			char currChar = url.charAt(i);
-			char nextChar = url.charAt(i+1);
+		for(int i = 0; i < input.length()-1; i++) {
+			char currChar = input.charAt(i);
+			char nextChar = input.charAt(i+1);
 
 			// If two characters are not same
 			if(currChar != nextChar) {
 				// Initialize new string to swap characters
-				StringBuilder sb = new StringBuilder(url);
+				StringBuilder sb = new StringBuilder(input);
 				sb.setCharAt(i, nextChar);
 				sb.setCharAt(i+1, currChar);
 
 				// Add new typo to the list
 				typos.add(sb.toString());
 			}
+
 			// Else do not do anything and continue loop
 		}
 	}
 	
 	// Type 4 Typos
 	// Henry Crain
-	private void getTyposType4(String url) {
+	private void getType4Typos(String url) {
 		//Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
 		Map<String, String[]> adjacencyMap = new HashMap<String, String[]>();
 		String [] list = {"1", "2", "3"};
@@ -125,7 +133,7 @@ public class Server {
 
 	// Type 5 Typos
 	// Nick Reimer
-	private void getTyposType5(String url) {
+	public void getType5Typos(String url) {
 		//Map<String, String[]> map = adjacentMap("Adjacent.json");
 		Map<String, String[]> map = new HashMap<String, String[]>();
 		String [] list1 = {"1", "2", "3"};
@@ -187,5 +195,4 @@ public class Server {
 	public String getTypos() {
 		return typos.toString();
 	}
-	
 }
