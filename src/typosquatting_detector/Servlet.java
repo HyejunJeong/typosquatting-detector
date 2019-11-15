@@ -8,15 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class Servlet extends HttpServlet {
-	
-	int port = 1099;
-	
+		
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	if(request.getParameter("input") != null && request.getParameter("input") != "") {
     		Server mn;
 			try {
-				mn = new Server(request.getParameter("input"), port);
-				port++;
+				mn = new Server(request.getParameter("input"));
 				request.setAttribute("output", mn.getTypos());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -28,4 +25,5 @@ public class Servlet extends HttpServlet {
         }
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }
+    
 }

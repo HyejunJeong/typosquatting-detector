@@ -1,6 +1,8 @@
 package typosquatting_detector;
 
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.rmi.Naming;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -10,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.lang.StringBuilder;
+
 public class Server implements ClientWork {
 
 	// Store generated typos here
@@ -20,7 +23,7 @@ public class Server implements ClientWork {
 	
 	public Server() {}
 
-	public Server(String input, int port) throws Exception {
+	public Server(String input) throws Exception {
 		// Initialize typos queue
 		this.typos = new LinkedList<String>();
 
@@ -28,19 +31,26 @@ public class Server implements ClientWork {
 		this.input = input;
 
 		// Generate typos
-		getType1Typos(input);
-		getType2Typos(input);
-		getType3Typos(input);
-		//getType4Typos(input);
-		//getType5Typos(input);
+		getTyposType1(input);
+		getTyposType2(input);
+		getTyposType3(input);
+		//getTyposType4(input);
+		//getTyposType5(input);
 		
+		// Assign work to clients
 		Service tester = new Service();
-		//Queue<WorkerNode> queue = new LinkedList<WorkerNode>();
-		//WorkerNode worker = new WorkerNode();
-		LocateRegistry.createRegistry(port);
+		Registry registry = LocateRegistry.createRegistry(1099);
 		Naming.rebind("Test", tester);
 		Client client = new Client();
 		client.go();
+		//Queue<WorkerNode> queue = new LinkedList<WorkerNode>();
+		//WorkerNode worker = new WorkerNode();
+		
+		// Close server
+		if (registry != null) {
+			registry.unbind("Test");
+		    UnicastRemoteObject.unexportObject(registry, true);
+		} 
 	}
 	
 	public String communicate() {
@@ -58,15 +68,10 @@ public class Server implements ClientWork {
 //		// Pass the input to getTypo3
 //		return sc.nextLine();
 //	}
-//	
-//	// Debug
-//	public void foo() {
-//		System.out.println("foo");
-//	}
 
 	// Type 1 Typos
 	// June Jeong
-	public void getType1Typos(String input) {
+	public void getTyposType1(String input) {
 		String typoURL = null;
 
 		boolean containsWww = input.startsWith("www.");
@@ -81,7 +86,7 @@ public class Server implements ClientWork {
 	
 	// Type 2 Typos
 	// June Jeong
-	public void getType2Typos(String input) {
+	public void getTyposType2(String input) {
 		int lengthOfURL = input.length();
 		boolean containsWww = input.startsWith("www.");
 				
@@ -106,7 +111,7 @@ public class Server implements ClientWork {
 
 	// Type 3 Typos
 	// Jay Moon
-	public void getType3Typos(String input) {
+	public void getTyposType3(String input) {
 
 		// Iterate through input string and generate typos
 		for(int i = 0; i < input.length()-1; i++) {
@@ -123,14 +128,13 @@ public class Server implements ClientWork {
 				// Add new typo to the list
 				typos.add(sb.toString());
 			}
-
 			// Else do not do anything and continue loop
 		}
 	}
 	
 	// Type 4 Typos
 	// Henry Crain
-	private void getType4Typos(String url) {
+	private void getTyposType4(String url) {
 		//Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
 		Map<String, String[]> adjacencyMap = new HashMap<String, String[]>();
 		String [] list = {"1", "2", "3"};
@@ -154,7 +158,7 @@ public class Server implements ClientWork {
 
 	// Type 5 Typos
 	// Nick Reimer
-	public void getType5Typos(String url) {
+	public void getTyposType5(String url) {
 		//Map<String, String[]> map = adjacentMap("Adjacent.json");
 		Map<String, String[]> map = new HashMap<String, String[]>();
 		String [] list1 = {"1", "2", "3"};
