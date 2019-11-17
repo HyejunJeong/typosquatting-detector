@@ -20,7 +20,8 @@ public class Client implements Remote, ClientWork{
 		      list.add(s);
 		}
 		System.out.println(list.toString());
-		//list here to give to worker nde dispatcher
+//		WorkerNodeDispatcher workers = new WorkerNodeDispatcher();
+		//list here to give to worker node dispatcher
 	}
 
 }

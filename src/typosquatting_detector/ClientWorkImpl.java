@@ -39,7 +39,7 @@ public class ClientWorkImpl implements Runnable, ClientWork {
 	@Override
 	public void run() {
 		// This path is a local path.
-		String chromeDriverPath = "/usr/bin/chromedriver";
+		String chromeDriverPath = "/usr/local/bin/chromedriver";
 	        
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 		ChromeOptions options = new ChromeOptions();

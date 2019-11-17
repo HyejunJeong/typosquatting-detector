@@ -1,12 +1,10 @@
 package typosquatting_detector;
 
-import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -16,9 +14,6 @@ public class ServletListener implements ServletContextListener {
 	
 	@Override
 	public void contextInitialized(ServletContextEvent arg) {
-		// Debug
-		System.out.println("hi from cl");
-		
 		try {
 			registry = LocateRegistry.createRegistry(1099);
 		} 
