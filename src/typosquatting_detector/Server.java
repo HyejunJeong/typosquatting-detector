@@ -2,43 +2,44 @@ package typosquatting_detector;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
 import java.lang.StringBuilder;
-import java.net.MalformedURLException;
 
 public class Server extends UnicastRemoteObject implements ServerInterface {
 
 	private static final long serialVersionUID = 1L;
 	
-	private LinkedList<URL> queue;
+	private LinkedList<String> queue;
 	
-	public Server(LinkedList<URL> iqueue) throws RemoteException {
+	public Server(LinkedList<String> iqueue) throws RemoteException {
 		super();
 		queue = iqueue;
 	}
 	
 	@Override
-	public LinkedList<URL> getQueue() {
+	public LinkedList<String> getQueue() {
 		return queue;
 	}
 	
 	@Override
 	public String pollURL() throws RemoteException {
-		return queue.poll().toString();
+		return queue.poll();
 	}
 	
 	public static void main(String args[]) {
 		// Initialize squeue
-		LinkedList<URL> squeue = new LinkedList<URL>();
+		LinkedList<String> squeue = new LinkedList<String>();
 		
 		// Generate typos and add them to queue
 		getTyposType1(squeue, args[0]);
@@ -58,7 +59,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 	
 	// Type 1 Typos
 	// June Jeong
-	private static void getTyposType1(LinkedList<URL> iqueue, String iurl) {
+	private static void getTyposType1(LinkedList<String> iqueue, String iurl) {
 		String typoURL = null;
 
 		boolean containsWww = iurl.startsWith("www.");
@@ -67,13 +68,13 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 			int indexOfDot = iurl.indexOf('.');
 			typoURL = iurl.substring(0, indexOfDot);
 			typoURL += iurl.substring(indexOfDot+1);
-			iqueue.add(new URL(typoURL));
+			iqueue.add(typoURL);
 		}
 	}
 	
 	// Type 2 Typos
 	// June Jeong
-	private static void getTyposType2(LinkedList<URL> iqueue, String iurl) {
+	private static void getTyposType2(LinkedList<String> iqueue, String iurl) {
 		int lengthOfURL = iurl.length();
 		boolean containsWww = iurl.startsWith("www.");
 				
@@ -91,14 +92,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 			typoURL = iurl.substring(0, index);
 			typoURL += iurl.substring(index+1);
 			
-			iqueue.add(new URL(typoURL));
+			iqueue.add(typoURL);
 			index ++;
 		}
 	}
 
 	// Type 3 Typos
 	// Jay Moon
-	private static void getTyposType3(LinkedList<URL> iqueue, String iurl) {
+	private static void getTyposType3(LinkedList<String> iqueue, String iurl) {
 
 		// Iterate through input string and generate typos
 		for(int i = 0; i < iurl.length()-1; i++) {
@@ -113,7 +114,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				sb.setCharAt(i+1, currChar);
 
 				// Add new typo to the list
-				iqueue.add(new URL(sb.toString()));
+				iqueue.add(sb.toString());
 			}
 			// Else do not do anything and continue loop
 		}
@@ -121,7 +122,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 	
 	// Type 4 Typos
 	// Henry Crain
-	private static void getTyposType4(LinkedList<URL> iqueue, String iurl) {
+	private static void getTyposType4(LinkedList<String> iqueue, String iurl) {
 		//Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
 		Map<String, String[]> adjacencyMap = new HashMap<String, String[]>();
 		String [] list = {"1", "2", "3"};
@@ -138,14 +139,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
 			for (String typo: adj) {
 				typoUrl.setCharAt(i, typo.charAt(0));
-				typos.add(typoUrl.toString());
+				iqueue.add(typoUrl.toString());
 			}
 		}
 	}
 
 	// Type 5 Typos
 	// Nick Reimer
-	private static void getTyposType5(LinkedList<URL> iqueue, String iurl) {
+	private static void getTyposType5(LinkedList<String> iqueue, String iurl) {
 		//Map<String, String[]> map = adjacentMap("Adjacent.json");
 		Map<String, String[]> map = new HashMap<String, String[]>();
 		String [] list1 = {"1", "2", "3"};
@@ -162,7 +163,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				String urlTypo = iurl.substring(0, i) + adjacent[j] + iurl.substring(i, iurl.length());
 				if (!list.contains(adjacent[j])) {
 					list.add(adjacent[j]);
-					typos.add(urlTypo);
+					iqueue.add(urlTypo);
 				}
 				j++;
 			}
@@ -172,7 +173,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				String urlTypo = iurl.substring(0, i + 1) + adjacent[j] + iurl.substring(i + 1, iurl.length());
 				if (!list.contains(adjacent[j])) {
 					list.add(adjacent[j]);
-					typos.add(urlTypo);
+					iqueue.add(urlTypo);
 				}
 				j++;
 			}

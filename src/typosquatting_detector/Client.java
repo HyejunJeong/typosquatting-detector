@@ -15,9 +15,9 @@ public class Client {
 		si = (ServerInterface) Naming.lookup("//localhost/Server");
 		
 		// Debug
-		LinkedList<URL> queue = si.getQueue();
-		for (URL curr : queue) {
-			System.out.println(curr.toString());
+		LinkedList<String> queue = si.getQueue();
+		for (String s : queue) {
+			System.out.println(s);
 		}
 		
 		// Crawl URL from here...
