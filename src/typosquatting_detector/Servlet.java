@@ -8,11 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Servlet extends HttpServlet {
 		
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private static final long serialVersionUID = 6248427955682198986L;
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	if(request.getParameter("input") != null && request.getParameter("input") != "" && request.getParameter("input").indexOf(' ') == -1) {
 			try {
-				Server mn = new Server(request.getParameter("input"));
-				request.setAttribute("output", mn.getTypos());
+				Server.main(new String[] {request.getParameter("input")});
+				Client.main(new String[] {});
+//				request.setAttribute("output", Server.getTypos());
 			}
 			catch (Exception e) {
 				e.printStackTrace();

@@ -1,27 +1,30 @@
 package typosquatting_detector;
 
+import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Queue;
 import java.util.LinkedList;
 
-public class Client implements Remote, ClientWork{
+public class Client {
 	
-	public String communicate() {
-		return "Hello from Service";
-	}
+	private static ServerInterface si;
 	
-	public void go() throws RemoteException, NotBoundException, Exception {
-		Service tester = (Service) Naming.lookup("//localhost/Test");
-		Queue<String> list = new LinkedList<String>();
-		for(String s: tester.communicate().split(" ")){
-		      list.add(s);
+	public static void main(String args[]) throws MalformedURLException, RemoteException, NotBoundException {
+		// Get remote server object
+		si = (ServerInterface) Naming.lookup("//localhost/Server");
+		
+		// Debug
+		LinkedList<URL> queue = si.getQueue();
+		for (URL curr : queue) {
+			System.out.println(curr.toString());
 		}
-		System.out.println(list.toString());
-//		WorkerNodeDispatcher workers = new WorkerNodeDispatcher();
-		//list here to give to worker node dispatcher
+		
+		// Crawl URL from here...
+		String url = si.pollURL();
+		
+		// Debug
+		System.out.println("Polled URL: " + url);
 	}
 
 }

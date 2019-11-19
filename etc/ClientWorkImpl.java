@@ -13,7 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-public class ClientWorkImpl implements Runnable, ClientWork {
+public class ClientWorkImpl implements Runnable, ServerInterface {
 
 	private String url;
 
