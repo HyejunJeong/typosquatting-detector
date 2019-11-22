@@ -60,8 +60,8 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 		getTyposType1(nurlQueue, args[0]);
 		getTyposType2(nurlQueue, args[0]);
 		getTyposType3(nurlQueue, args[0]);
-//		getTyposType4(nurlQueue, args[0]);
-//		getTyposType5(nurlQueue, args[0]);
+		getTyposType4(nurlQueue, args[0]);
+		getTyposType5(nurlQueue, args[0]);
 		
 		// Bind remote server object with queue
 		try {
@@ -140,12 +140,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	// Henry Crain
 	private static void getTyposType4(LinkedList<String> iurlQueue, String iurl) {
 		//Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
-		Map<String, String[]> adjacencyMap = new HashMap<String, String[]>();
-		String [] list = {"1", "2", "3"};
-		String [] list2 = {"4", "5", "6"};
-		adjacencyMap.put("a", list);
-		adjacencyMap.put("b", list);
-		System.out.println(adjacencyMap.size());
+		Map<String, String[]> adjacencyMap = new Adjacent().getMap();
 
 		for (int i = 0; i < iurl.length(); i++) {
 			StringBuilder typoUrl = new StringBuilder(iurl);
@@ -163,12 +158,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	// Type 5 Typos
 	// Nick Reimer
 	private static void getTyposType5(LinkedList<String> iurlQueue, String iurl) {
-		//Map<String, String[]> map = adjacentMap("Adjacent.json");
-		Map<String, String[]> map = new HashMap<String, String[]>();
-		String [] list1 = {"1", "2", "3"};
-		String [] list2 = {"4", "5", "6"};
-		map.put("a", list1);
-		map.put("b", list2);
+		Map<String, String[]> map = new Adjacent().getMap();
 		int i = 0;
 		int j;
 		List<String> list = new ArrayList<String>();
