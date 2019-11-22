@@ -21,16 +21,16 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 
 	private static final long serialVersionUID = 1L;
 	
-	private LinkedList<Client> clientList;		// List of clients
-	private LinkedList<String> urlQueue;		// Queue of URLs
+	private LinkedList<RemoteInterface> clientList;		// List of clients
+	private LinkedList<String> urlQueue;				// Queue of URLs
 	
-	public Server(LinkedList<Client> iclientList, LinkedList<String> iurlQueue) throws RemoteException {
+	public Server(LinkedList<RemoteInterface> iclientList, LinkedList<String> iurlQueue) throws RemoteException {
 		clientList = iclientList;
 		urlQueue = iurlQueue;
 	}
 	
 	@Override
-	public void addClient(Client iclient) {
+	public void addClient(RemoteInterface iclient) {
 		clientList.add(iclient);
 	}
 	
@@ -40,7 +40,8 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	}
 	
 	@Override
-	public LinkedList<Client> getClientList() {
+	public LinkedList<RemoteInterface> getClientList() {
+		System.out.println(clientList.toString());
 		return clientList;
 	}
 	
@@ -51,7 +52,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	
 	public static void main(String args[]) {
 		// Initialize nclientList
-		LinkedList<Client> nclientList = new LinkedList<Client>();
+		LinkedList<RemoteInterface> nclientList = new LinkedList<RemoteInterface>();
 		
 		// Initialize nurlQueue
 		LinkedList<String> nurlQueue = new LinkedList<String>();
