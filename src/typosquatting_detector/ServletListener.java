@@ -27,7 +27,7 @@ public class ServletListener implements ServletContextListener {
 		// Close server
 		if (registry != null) {
 			try {
-				registry.unbind("Test");
+				registry.unbind("//localhost/Server");
 				UnicastRemoteObject.unexportObject(registry, true);
 			} 
 			catch (RemoteException | NotBoundException e) {
