@@ -1,4 +1,4 @@
-package typosquatting_detector;
+ package typosquatting_detector;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -14,7 +14,7 @@ public class Servlet extends HttpServlet {
     	if(request.getParameter("input") != null && request.getParameter("input") != "" && request.getParameter("input").indexOf(' ') == -1) {
 			try {
 				Server.main(new String[] {request.getParameter("input")});
-				Client.main(new String[] {});
+//				Client.main(new String[] {});
 //				request.setAttribute("output", Server.getTypos());
 			}
 			catch (Exception e) {

@@ -8,67 +8,75 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import com.healthmarketscience.rmiio.RemoteInputStream;
-import com.healthmarketscience.rmiio.RemoteInputStreamClient;
-
-//import org.json.simple.JSONArray;
-//import org.json.simple.JSONObject;
-//import org.json.simple.parser.JSONParser;
-//import org.json.simple.parser.ParseException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.StringBuilder;
+import java.net.MalformedURLException;
 
-public class Server extends UnicastRemoteObject implements ServerInterface {
+public class Server extends UnicastRemoteObject implements RemoteInterface {
 
 	private static final long serialVersionUID = 1L;
 	
-	private LinkedList<String> queue;
+	private LinkedList<RemoteInterface> clientList;		// List of clients
+	private LinkedList<String> urlQueue;				// Queue of URLs
 	
-	public Server(LinkedList<String> iqueue) throws RemoteException {
-		super();
-		queue = iqueue;
+	public Server(LinkedList<RemoteInterface> iclientList, LinkedList<String> iurlQueue) throws RemoteException {
+		clientList = iclientList;
+		urlQueue = iurlQueue;
 	}
 	
 	@Override
-	public LinkedList<String> getQueue() {
-		return queue;
+	public void addClient(RemoteInterface iclient) {
+		clientList.add(iclient);
 	}
 	
 	@Override
 	public String pollURL() throws RemoteException {
-		return queue.poll();
+		return urlQueue.poll();
 	}
 	
-	public void sendFile(String fileName, RemoteInputStream remoteFileData) throws IOException {
-		InputStream fileData = RemoteInputStreamClient.wrap(remoteFileData);
+	@Override
+	public LinkedList<RemoteInterface> getClientList() {
+		System.out.println(clientList.toString());
+		return clientList;
+	}
+	
+	@Override
+	public LinkedList<String> getURLQueue() {
+		return urlQueue;
 	}
 	
 	public static void main(String args[]) {
-		// Initialize squeue
-		LinkedList<String> squeue = new LinkedList<String>();
+		// Initialize nclientList
+		LinkedList<RemoteInterface> nclientList = new LinkedList<RemoteInterface>();
+		
+		// Initialize nurlQueue
+		LinkedList<String> nurlQueue = new LinkedList<String>();
 		
 		// Generate typos and add them to queue
-		getTyposType1(squeue, args[0]);
-		getTyposType2(squeue, args[0]);
-		getTyposType3(squeue, args[0]);
-		getTyposType4(squeue, args[0]);
-		getTyposType5(squeue, args[0]);
+		getTyposType1(nurlQueue, args[0]);
+		getTyposType2(nurlQueue, args[0]);
+		getTyposType3(nurlQueue, args[0]);
+		getTyposType4(nurlQueue, args[0]);
+		getTyposType5(nurlQueue, args[0]);
 		
+		// Bind remote server object with queue
 		try {
-			// Bind remote server object with queue
-			Naming.rebind("//localhost/Server", new Server(squeue));
+			Naming.rebind("//localhost/Server", new Server(nclientList, nurlQueue));
 		} 
-		catch (Exception e) {
+		catch (RemoteException | MalformedURLException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	// Type 1 Typos
 	// June Jeong
-	private static void getTyposType1(LinkedList<String> iqueue, String iurl) {
+	private static void getTyposType1(LinkedList<String> iurlQueue, String iurl) {
 		String typoURL = null;
 
 		boolean containsWww = iurl.startsWith("www.");
@@ -77,13 +85,13 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 			int indexOfDot = iurl.indexOf('.');
 			typoURL = iurl.substring(0, indexOfDot);
 			typoURL += iurl.substring(indexOfDot+1);
-			iqueue.add(typoURL);
+			iurlQueue.add(typoURL);
 		}
 	}
 	
 	// Type 2 Typos
 	// June Jeong
-	private static void getTyposType2(LinkedList<String> iqueue, String iurl) {
+	private static void getTyposType2(LinkedList<String> iurlQueue, String iurl) {
 		int lengthOfURL = iurl.length();
 		boolean containsWww = iurl.startsWith("www.");
 				
@@ -101,14 +109,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 			typoURL = iurl.substring(0, index);
 			typoURL += iurl.substring(index+1);
 			
-			iqueue.add(typoURL);
+			iurlQueue.add(typoURL);
 			index ++;
 		}
 	}
 
 	// Type 3 Typos
 	// Jay Moon
-	private static void getTyposType3(LinkedList<String> iqueue, String iurl) {
+	private static void getTyposType3(LinkedList<String> iurlQueue, String iurl) {
 
 		// Iterate through input string and generate typos
 		for(int i = 0; i < iurl.length()-1; i++) {
@@ -123,7 +131,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				sb.setCharAt(i+1, currChar);
 
 				// Add new typo to the list
-				iqueue.add(sb.toString());
+				iurlQueue.add(sb.toString());
 			}
 			// Else do not do anything and continue loop
 		}
@@ -131,7 +139,8 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 	
 	// Type 4 Typos
 	// Henry Crain
-	private static void getTyposType4(LinkedList<String> iqueue, String iurl) {
+	private static void getTyposType4(LinkedList<String> iurlQueue, String iurl) {
+		//Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
 		Map<String, String[]> adjacencyMap = new Adjacent().getMap();
 
 		for (int i = 0; i < iurl.length(); i++) {
@@ -142,14 +151,14 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 
 			for (String typo: adj) {
 				typoUrl.setCharAt(i, typo.charAt(0));
-				iqueue.add(typoUrl.toString());
+				iurlQueue.add(typoUrl.toString());
 			}
 		}
 	}
 
 	// Type 5 Typos
 	// Nick Reimer
-	private static void getTyposType5(LinkedList<String> iqueue, String iurl) {
+	private static void getTyposType5(LinkedList<String> iurlQueue, String iurl) {
 		Map<String, String[]> map = new Adjacent().getMap();
 		int i = 0;
 		int j;
@@ -161,7 +170,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				String urlTypo = iurl.substring(0, i) + adjacent[j] + iurl.substring(i, iurl.length());
 				if (!list.contains(adjacent[j])) {
 					list.add(adjacent[j]);
-					iqueue.add(urlTypo);
+					iurlQueue.add(urlTypo);
 				}
 				j++;
 			}
@@ -171,7 +180,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 				String urlTypo = iurl.substring(0, i + 1) + adjacent[j] + iurl.substring(i + 1, iurl.length());
 				if (!list.contains(adjacent[j])) {
 					list.add(adjacent[j]);
-					iqueue.add(urlTypo);
+					iurlQueue.add(urlTypo);
 				}
 				j++;
 			}
@@ -179,7 +188,7 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 		}
 	}
 
-	/*private static Map<String, String[]> adjacentMap(String filename) {
+	private static Map<String, String[]> adjacentMap(String filename) {
 		JSONParser parser = new JSONParser();
 		Map<String, String[]> map = new HashMap<>();
 		
@@ -201,5 +210,5 @@ public class Server extends UnicastRemoteObject implements ServerInterface {
 			e.printStackTrace();
 		}
 		return map;
-	}*/
+	}
 }
