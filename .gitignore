@@ -5,10 +5,10 @@
 .project
 .classpath
 .settings/
+/build/
 
 # IntelliJ
 *.iml
 *.iws
 *.ipr
 .idea/
-/build/
