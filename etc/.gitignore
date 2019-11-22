@@ -1,7 +1,11 @@
-/CharOmissionTypos.class
 /CharacterReplacementTest.class
+/CharOmissionTypos.class
+/ClientWorkImpl.class
 /ListCharOmissionTypos.class
+/MasterNode.class
 /MissingDotTypos.class
 /TestTypo3.class
 /Typo.class
 /Typo3.class
+/WorkerNode.class
+/WorkerNodeDispatcher.class
