@@ -27,17 +27,18 @@ public class Client extends UnicastRemoteObject implements RemoteInterface {
 	public Client(RemoteInterface iserver, String iurl) throws RemoteException {
 		server = iserver;
 		url = iurl;
+		System.out.println(server.getClientList().toString());
 		crawl();
 	}
 	
 	@Override
-	public void addClient(Client iclient) throws RemoteException {}
+	public void addClient(RemoteInterface iclient) throws RemoteException {}
 
 	@Override
 	public String pollURL() throws RemoteException { return null; }
 
 	@Override
-	public LinkedList<Client> getClientList() throws RemoteException { return null; }
+	public LinkedList<RemoteInterface> getClientList() throws RemoteException { return null; }
 
 	@Override
 	public LinkedList<String> getURLQueue() throws RemoteException { return null; }
