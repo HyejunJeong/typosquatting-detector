@@ -10,7 +10,7 @@ import javax.servlet.ServletContextListener;
 
 public class ServletListener implements ServletContextListener {
 	
-	Registry registry;
+	private Registry registry;
 	
 	@Override
 	public void contextInitialized(ServletContextEvent arg) {

@@ -6,7 +6,6 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,30 +13,41 @@ import java.nio.charset.StandardCharsets;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class Client {
+public class Client extends UnicastRemoteObject implements RemoteInterface {
 	
-	private static ServerInterface si;
+	private static final long serialVersionUID = 1L;
 	
-	public static void main(String args[]) throws MalformedURLException, RemoteException, NotBoundException {
-		// Get remote server object
-		si = (ServerInterface) Naming.lookup("//localhost/Server");
+	private RemoteInterface server;
+	private String url;
+	
+	public Client(RemoteInterface iserver, String iurl) throws RemoteException {
+		server = iserver;
+		url = iurl;
+		crawl();
+	}
+	
+	@Override
+	public void addClient(Client iclient) throws RemoteException {}
 
+	@Override
+	public String pollURL() throws RemoteException { return null; }
+
+	@Override
+	public LinkedList<Client> getClientList() throws RemoteException { return null; }
+
+	@Override
+	public LinkedList<String> getURLQueue() throws RemoteException { return null; }
+	
+	public void crawl() {
+		// Ask for local chrome driver path
 		Scanner input = new Scanner(System.in);
-		System.out.print("Enter path to Chrome Driver: ");
+		System.out.print("Enter Path to Chrome Driver: ");
 		String chromeDriverPath = input.nextLine();
 		
-		// Debug
-		LinkedList<String> queue = si.getQueue();
-		for (String s : queue) {
-			System.out.println(s);
-		}
-		
-		// Crawl URL from here...
-		String url = si.pollURL();
-
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--silent");
@@ -62,4 +72,24 @@ public class Client {
 			System.err.printf("Failed to get screenshot for %s%n", url);
 		}
 	}
+	
+	public static void main(String args[]) {
+		try {
+			// Get remote server object
+			RemoteInterface nserver = (RemoteInterface) Naming.lookup("//localhost/Server");
+			
+			// Debug
+			LinkedList<String> queue = nserver.getURLQueue();
+			for (String s : queue) {
+				System.out.println(s);
+			}
+			
+			// Create new client object
+			nserver.addClient(new Client(nserver, nserver.pollURL()));
+		} 
+		catch (MalformedURLException | RemoteException | NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
