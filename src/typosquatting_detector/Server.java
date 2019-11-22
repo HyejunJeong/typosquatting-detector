@@ -4,16 +4,9 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.StringBuilder;
 import java.net.MalformedURLException;
 
@@ -117,7 +110,6 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	// Type 3 Typos
 	// Jay Moon
 	private static void getTyposType3(LinkedList<String> iurlQueue, String iurl) {
-
 		// Iterate through input string and generate typos
 		for(int i = 0; i < iurl.length()-1; i++) {
 			char currChar = iurl.charAt(i);
@@ -140,7 +132,6 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	// Type 4 Typos
 	// Henry Crain
 	private static void getTyposType4(LinkedList<String> iurlQueue, String iurl) {
-		//Map<String, String[]> adjacencyMap = adjacentMap("Adjacent.json");
 		Map<String, String[]> adjacencyMap = new Adjacent().getMap();
 
 		for (int i = 0; i < iurl.length(); i++) {
@@ -187,28 +178,5 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 			i++;
 		}
 	}
-
-	private static Map<String, String[]> adjacentMap(String filename) {
-		JSONParser parser = new JSONParser();
-		Map<String, String[]> map = new HashMap<>();
-		
-
-		try {
-			JSONObject obj = (JSONObject) parser.parse(new FileReader(filename));
-			JSONArray arr = (JSONArray) obj.get("keys");
-
-			for (Object value : arr) {
-				JSONObject o = (JSONObject) value;
-				JSONArray jsonChars = (JSONArray) o.get("adjacent");
-				String[] chars = new String[jsonChars.size()];
-				for (int j = 0; j < jsonChars.size(); j++) {
-					chars[j] = (String) jsonChars.get(j);
-				}
-				map.put((String) o.get("key"), chars);
-			}
-		} catch(IOException | ParseException e) {
-			e.printStackTrace();
-		}
-		return map;
-	}
+	
 }
