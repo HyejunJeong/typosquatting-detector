@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.lang.StringBuilder;
 import java.net.MalformedURLException;
 
@@ -15,15 +16,15 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	private static final long serialVersionUID = 1L;
 	
 	private LinkedList<RemoteInterface> clientList;		// List of clients
-	private LinkedList<String> urlQueue;				// Queue of URLs
+	private ConcurrentLinkedQueue<String> urlQueue;		// Queue of URLs
 	
-	public Server(LinkedList<RemoteInterface> iclientList, LinkedList<String> iurlQueue) throws RemoteException {
-		clientList = iclientList;
+	public Server(ConcurrentLinkedQueue<String> iurlQueue) throws RemoteException {
 		urlQueue = iurlQueue;
+		clientList = new LinkedList<RemoteInterface>();
 	}
 	
 	@Override
-	public void addClient(RemoteInterface iclient) {
+	public void addClient(RemoteInterface iclient) throws RemoteException {
 		clientList.add(iclient);
 	}
 	
@@ -33,22 +34,24 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	}
 	
 	@Override
-	public LinkedList<RemoteInterface> getClientList() {
-		System.out.println(clientList.toString());
+	public LinkedList<RemoteInterface> getClientList() throws RemoteException {
 		return clientList;
 	}
 	
 	@Override
-	public LinkedList<String> getURLQueue() {
+	public ConcurrentLinkedQueue<String> getURLQueue() throws RemoteException {
 		return urlQueue;
 	}
 	
+	@Override
+	public String getClientID() throws RemoteException { return null; }
+	
 	public static void main(String args[]) {
-		// Initialize nclientList
-		LinkedList<RemoteInterface> nclientList = new LinkedList<RemoteInterface>();
+		// Print message for the users
+		System.out.println("Starting Server...");
 		
 		// Initialize nurlQueue
-		LinkedList<String> nurlQueue = new LinkedList<String>();
+		ConcurrentLinkedQueue<String> nurlQueue = new ConcurrentLinkedQueue<String>();
 		
 		// Generate typos and add them to queue
 		getTyposType1(nurlQueue, args[0]);
@@ -59,7 +62,10 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 		
 		// Bind remote server object with queue
 		try {
-			Naming.rebind("//localhost/Server", new Server(nclientList, nurlQueue));
+			Naming.rebind("//localhost/Server", new Server(nurlQueue));
+			
+			// Print message for the users
+			System.out.println("Server Successfully Started!");
 		} 
 		catch (RemoteException | MalformedURLException e) {
 			e.printStackTrace();
@@ -69,7 +75,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	
 	// Type 1 Typos
 	// June Jeong
-	private static void getTyposType1(LinkedList<String> iurlQueue, String iurl) {
+	private static void getTyposType1(ConcurrentLinkedQueue<String> iurlQueue, String iurl) {
 		String typoURL = null;
 
 		boolean containsWww = iurl.startsWith("www.");
@@ -84,7 +90,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	
 	// Type 2 Typos
 	// June Jeong
-	private static void getTyposType2(LinkedList<String> iurlQueue, String iurl) {
+	private static void getTyposType2(ConcurrentLinkedQueue<String> iurlQueue, String iurl) {
 		int lengthOfURL = iurl.length();
 		boolean containsWww = iurl.startsWith("www.");
 				
@@ -109,7 +115,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 
 	// Type 3 Typos
 	// Jay Moon
-	private static void getTyposType3(LinkedList<String> iurlQueue, String iurl) {
+	private static void getTyposType3(ConcurrentLinkedQueue<String> iurlQueue, String iurl) {
 		// Iterate through input string and generate typos
 		for(int i = 0; i < iurl.length()-1; i++) {
 			char currChar = iurl.charAt(i);
@@ -131,7 +137,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	
 	// Type 4 Typos
 	// Henry Crain
-	private static void getTyposType4(LinkedList<String> iurlQueue, String iurl) {
+	private static void getTyposType4(ConcurrentLinkedQueue<String> iurlQueue, String iurl) {
 		Map<String, String[]> adjacencyMap = new Adjacent().getMap();
 
 		for (int i = 0; i < iurl.length(); i++) {
@@ -149,7 +155,7 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 
 	// Type 5 Typos
 	// Nick Reimer
-	private static void getTyposType5(LinkedList<String> iurlQueue, String iurl) {
+	private static void getTyposType5(ConcurrentLinkedQueue<String> iurlQueue, String iurl) {
 		Map<String, String[]> map = new Adjacent().getMap();
 		int i = 0;
 		int j;
