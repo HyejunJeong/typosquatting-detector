@@ -1,14 +1,26 @@
 package typosquatting_detector;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -18,6 +30,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
 
 public class Client extends UnicastRemoteObject implements RemoteInterface {
 	
@@ -63,8 +76,16 @@ public class Client extends UnicastRemoteObject implements RemoteInterface {
 		String chromeDriverPath = input.nextLine();
 		
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+		
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--silent");
+		options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--silent","--remote-debugging-port=8081");
+		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+		
+		LoggingPreferences logPrefs = new LoggingPreferences();
+		logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+		capabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+		
 		WebDriver driver = new ChromeDriver(options);
 		
 		// Get URL Queue
@@ -81,6 +102,20 @@ public class Client extends UnicastRemoteObject implements RemoteInterface {
 		while(!urlQueue.isEmpty()) {
 			// Get the URL
 			String url = urlQueue.poll();
+			
+			// Kludgy way of checking if site actually exists
+			try {
+				HttpURLConnection connection = (HttpURLConnection) new URL("https://" + url).openConnection();
+				connection.setRequestMethod("GET");
+				if (connection.getResponseCode() == 404) {
+					System.out.println(url + " not found");
+					continue;
+				}
+			} catch (IOException e) {
+				System.out.println(url + " not found");
+				continue;
+			}
+			
 			driver.get("https://" + url);
 			
 			// Print message for the users
