@@ -16,6 +16,7 @@ public class ServletListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg) {
 		try {
 			registry = LocateRegistry.createRegistry(1099);
+			ServerImpl.init();
 		} 
 		catch (RemoteException e) {
 			e.printStackTrace();
@@ -27,7 +28,7 @@ public class ServletListener implements ServletContextListener {
 		// Close server
 		if (registry != null) {
 			try {
-				registry.unbind("//localhost/Server");
+				registry.unbind("Server");
 				UnicastRemoteObject.unexportObject(registry, true);
 			} 
 			catch (RemoteException | NotBoundException e) {
