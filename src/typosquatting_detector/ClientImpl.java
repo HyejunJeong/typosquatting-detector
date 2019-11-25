@@ -3,6 +3,7 @@ package typosquatting_detector;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -23,6 +24,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class ClientImpl extends UnicastRemoteObject implements Client {
@@ -111,7 +113,13 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 				continue;
 			}
 			
-			driver.get("https://" + url);
+			driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+			try {
+				driver.get("https://" + url);
+			} catch (TimeoutException e) {
+				System.out.println("Address Not Found " + url);
+				continue;
+			}
 			
 			// Print message for the users
 			System.out.println("Started Crawling " + url);
