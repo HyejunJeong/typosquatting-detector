@@ -11,7 +11,11 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -93,6 +97,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			System.out.println(s);
 		}
 		
+		String beginScreenshot = "\n\n screenshot \n";
+		String beginSource = "\n\n\n source code \n\n\n";
+		String txtReport = "";
+		String fileName = "";
+		
 		// Print message for the users
 		System.out.println("\nStarting to Crawl URLs From the Queue...");
 		
@@ -121,29 +130,42 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 				continue;
 			}
 			
+			fileName = "sites/" + url + ".txt";
+			
 			// Print message for the users
 			System.out.println("Started Crawling " + url);
 
-			// Get the source code of the page and save it to a file
+			// Report in txt
+			File txtFileReport = new File(fileName);
+			
+			// Converting screenshot
+			String screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
+			
+			// Get the source code of the page
+			String source = driver.getPageSource();
+			
+			//Assemble imageString and Source
+			txtReport += url + beginScreenshot + screenshot + beginSource + source;
+			
 			try {
-				File source = new File("sites/" + url + "/" + url + ".html");
-				FileUtils.writeStringToFile(source, driver.getPageSource(), StandardCharsets.UTF_8.name());
-			} 
-			catch (IOException e) {
-				System.err.printf("ERROR: Failed to Get Page Source For %s%n", url);
-			}
-
-			// Take a screenshot of the current page
-			try {
-				File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-				FileUtils.copyFile(screenshot, new File("sites/" + url + "/" + url + ".png"));
-			} 
-			catch (IOException e) {
-				System.err.printf("Failed to get screenshot for %s%n", url);
+				FileUtils.writeStringToFile(txtFileReport, txtReport, StandardCharsets.UTF_8.name());
+			} catch (IOException e) {
+				System.err.printf("ERROR: Failed to Get Report for %s%n", url);
 			}
 			
+			SimpleRemoteInputStream istream = null;
+			try {
+				istream = new SimpleRemoteInputStream(new FileInputStream(fileName));
+				server.sendFile(istream.export());
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if(istream != null)
+					istream.close();
+			}
 			// Print message for the users
 			System.out.println("Done Crawling " + url);
+
 		}
 		
 		// Print message for the users

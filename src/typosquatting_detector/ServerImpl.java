@@ -3,11 +3,24 @@ package typosquatting_detector;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.apache.commons.io.FileUtils;
+
+import com.healthmarketscience.rmiio.RemoteInputStream;
+import com.healthmarketscience.rmiio.RemoteInputStreamClient;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.StringBuilder;
 import java.net.MalformedURLException;
 
@@ -66,6 +79,55 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public ConcurrentLinkedQueue<String> getURLQueue() throws RemoteException {
 		return urlQueue;
 	}
+	
+	@Override
+	public void sendFile(RemoteInputStream ristream) throws IOException {
+		InputStream istream = RemoteInputStreamClient.wrap(ristream);
+		FileOutputStream ostream = null;
+		
+		try {
+			File tempFile = File.createTempFile("receivedFile_", ".txt");
+
+			System.out.println("path: " + tempFile.getPath());
+			
+			ostream = new FileOutputStream(tempFile);
+			System.out.println("Writing file " + tempFile);
+			
+			byte[] buf = new byte[1024];
+			int bytesRead = 0;
+			while((bytesRead = istream.read(buf)) >= 0)
+				ostream.write(buf, 0, bytesRead);
+			ostream.flush();
+			
+			System.out.println("Finished writing file " + tempFile);
+		} finally {
+			try {
+				if(istream != null)
+					istream.close();
+			} finally {
+				if(ostream != null)
+					ostream.close();
+			}
+		}
+	}
+	
+//	public File convert2png(File txtReport) {
+//		
+//	}
+//	
+//	public boolean createReport() {
+//		try {
+//			File report = new File("report.html");
+//			String htmlString = FileUtils.readFileToString(report);
+//			String url = "";
+//			String body = "This is body";
+//			htmlString = htmlString.replace("$body", body);
+//			FileUtils.writeStringToFile(report, htmlString);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return true;
+//	}
 	
 	@Override
 	public void assignWork(String iurl) throws RemoteException {
@@ -198,5 +260,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			i++;
 		}
 	}
+
+	
 	
 }
