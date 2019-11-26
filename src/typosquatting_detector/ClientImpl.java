@@ -97,8 +97,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			System.out.println(s);
 		}
 		
-		String beginScreenshot = "\n\n screenshot \n";
-		String beginSource = "\n\n\n source code \n\n\n";
 		String txtReport = "";
 		String fileName = "";
 		
@@ -145,7 +143,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			String source = driver.getPageSource();
 			
 			//Assemble imageString and Source
-			txtReport += url + beginScreenshot + screenshot + beginSource + source;
+			txtReport += url + "\n" + screenshot + "\n" + source;
 			
 			try {
 				FileUtils.writeStringToFile(txtFileReport, txtReport, StandardCharsets.UTF_8.name());

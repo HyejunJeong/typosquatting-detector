@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Stream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 
 import com.healthmarketscience.rmiio.RemoteInputStream;
@@ -21,8 +23,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.StringBuilder;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class ServerImpl extends UnicastRemoteObject implements Server {
 
@@ -79,6 +84,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public ConcurrentLinkedQueue<String> getURLQueue() throws RemoteException {
 		return urlQueue;
 	}
+		
 	
 	@Override
 	public void sendFile(RemoteInputStream ristream) throws IOException {
@@ -109,24 +115,74 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		}
 	}
 	
-//	public File convert2png(File txtReport) {
-//		
+//
+//	String url;
+//	String imgString;
+//	String source;
+//	
+//	File screenshot;
+//
+//	private String readFileToString(File f) {
+//		//String path = tempFile.getPath();
+//		String content = "";
+//		try {
+//			content = FileUtils.readFileToString(f);
+//			String[] lines = content.split("\r\n|\r|\n", 3);
+//			url = lines[0];
+//			imgString = lines[1];
+//			source = lines[2];
+//		} catch (IOException e) {
+//			System.err.println("ERROR: No such file");
+//		}
+//		return content;
 //	}
 //	
+//	private String getURL() {
+//		return url;
+//	}
+//	
+//	private String getSource() {
+//		return source;
+//	}
+//	
+//	private void convert2png() {
+//		OutputStream ops = null;
+//		byte[] byteImg = Base64.decodeBase64(imgString);
+//		try {
+//			ops = new FileOutputStream("./images/"+url+".png");
+//			ops.write(byteImg);
+//		} catch (FileNotFoundException e) {
+//			System.err.println("ERROR: No such file");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	
+//	// not finished
 //	public boolean createReport() {
 //		try {
 //			File report = new File("report.html");
+//			
 //			String htmlString = FileUtils.readFileToString(report);
-//			String url = "";
-//			String body = "This is body";
-//			htmlString = htmlString.replace("$body", body);
+//			String imgPath = "./images/"+url+".png";
+//			
+//			String url = getURL();
+//			File sceenshot  = new File(imgPath);
+//			String source = getSource();
+//			
+//			htmlString = htmlString.replace("$url", url);
+//			htmlString = htmlString.replace("$screenshot", imgPath);
+//			htmlString = htmlString.replace("$source", source);
+//
 //			FileUtils.writeStringToFile(report, htmlString);
+//			
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
 //		return true;
 //	}
-	
+//	
 	@Override
 	public void assignWork(String iurl) throws RemoteException {
 		if (!clientMap.isEmpty()) {
