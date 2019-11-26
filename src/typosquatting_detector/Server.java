@@ -8,10 +8,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.StringBuilder;
@@ -48,6 +54,35 @@ public class Server extends UnicastRemoteObject implements RemoteInterface {
 	@Override
 	public LinkedList<String> getURLQueue() {
 		return urlQueue;
+	}
+	
+	/*@Override
+	public void receiveFile(byte[] bytes, String url) throws IOException {
+		System.out.println(bytes.length);
+		File file = new File("./test");
+		FileOutputStream out = new FileOutputStream(file);
+		out.write(bytes);
+		FileUtils.copyFile(file, new File("sitesServer/" + url + "/" + url + ".png"));
+	}*/
+	
+	@Override
+	public void receiveFile(File file, String url) {
+		System.out.println(file.length());
+		System.out.println(file);
+		//File file = new File("./test");
+		//FileOutputStream out = new FileOutputStream(file);
+		//out.write(bytes);
+		try {
+			FileUtils.copyFile(file, new File("sitez/" + url + "/" + url + ".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	@Override
+	public void sendFile() {
+		
 	}
 	
 	public static void main(String args[]) {

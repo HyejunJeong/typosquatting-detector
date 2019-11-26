@@ -8,6 +8,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
@@ -44,6 +46,16 @@ public class Client extends UnicastRemoteObject implements RemoteInterface {
 	@Override
 	public LinkedList<String> getURLQueue() throws RemoteException { return null; }
 	
+	@Override
+	public void receiveFile(File file, String url) {
+		
+	}
+	
+	@Override
+	public void sendFile() {
+		
+	}
+	
 	public void crawl() {
 		// Ask for local chrome driver path
 		Scanner input = new Scanner(System.in);
@@ -61,18 +73,29 @@ public class Client extends UnicastRemoteObject implements RemoteInterface {
 		// Get the source code of the page and save it to a file
 		try {
 			File source = new File("sites/" + url + "/" + url + ".html");
-			FileUtils.writeStringToFile(source, driver.getPageSource(), StandardCharsets.UTF_8.name());
+			FileUtils.writeStringToFile(source, driver.getPageSource(), StandardCharsets.UTF_8.name());	// saves html
+			try {
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} catch (IOException e) {
 			System.err.printf("Failed to get page source for %s%n", url);
 		}
 
 		// Take a screenshot of the current page
 		try {
-			File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);		// saves screenshot
 			FileUtils.copyFile(screenshot, new File("sites/" + url + "/" + url + ".png"));
-		} catch (IOException e) {
+			//FileInputStream in = new FileInputStream(screenshot);
+			//byte[] bytes = new byte[(int) screenshot.length()];
+			//in.read(bytes);
+			System.out.println(screenshot.length());
+			System.out.println(screenshot);
+			server.receiveFile(screenshot, url);
+		} catch (Exception e) {
 			System.err.printf("Failed to get screenshot for %s%n", url);
 		}
+		
 	}
 	
 	public static void main(String args[]) {
