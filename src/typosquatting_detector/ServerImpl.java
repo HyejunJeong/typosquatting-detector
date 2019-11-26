@@ -87,11 +87,9 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		
 		try {
 			File tempFile = File.createTempFile("receivedFile_", ".txt");
-
-			System.out.println("path: " + tempFile.getPath());
 			
 			ostream = new FileOutputStream(tempFile);
-			System.out.println("Writing file " + tempFile);
+			System.out.println("Writing file ...");
 			
 			byte[] buf = new byte[1024];
 			int bytesRead = 0;
