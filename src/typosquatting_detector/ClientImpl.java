@@ -97,7 +97,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			System.out.println(s);
 		}
 		
-		String txtReport = "";
 		String fileName = "";
 		
 		// Print message for the users
@@ -143,7 +142,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			String source = driver.getPageSource();
 			
 			//Assemble imageString and Source
+			String txtReport = "";
+
 			txtReport += url + "\n" + screenshot + "\n" + source;
+			
 			
 			try {
 				FileUtils.writeStringToFile(txtFileReport, txtReport, StandardCharsets.UTF_8.name());
