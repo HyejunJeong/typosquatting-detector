@@ -11,9 +11,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
 import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,21 +39,39 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		// Print message for the users
 		System.out.println("Starting Client...");
 		
-		// Ask for local chrome driver path
+		// Ask for IP addresses and local chrome driver path
 		Scanner scanner = new Scanner(System.in);
-		System.out.print("\nPlease Enter the Path to Chrome Driver: ");
+		System.out.print("\nPlease Enter Your Local IP Address: ");
+		String caddr = scanner.nextLine();
+		System.out.print("Please Enter the Hosted Server's Local IP Address: ");
+		String saddr = scanner.nextLine();
+		System.out.print("Please Enter the Path to Chrome Driver: ");
 		chromeDriverPath = scanner.nextLine();
 		scanner.close();
 		
 		try {
 			// Get remote server object
-			Registry registry = LocateRegistry.getRegistry(1099);
+			System.setProperty("java.rmi.server.hostname", caddr);
+			Registry registry = LocateRegistry.getRegistry(saddr, 1099);
 			Server nserver = (Server) registry.lookup("Server");
 			
 			// Create new client object
 			String nid = UUID.randomUUID().toString();
 			Client nclient = new ClientImpl(nserver, nid);
 			nserver.registerClient(nid, nclient);
+			
+			// Add shutdown hook
+			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		        public void run() {
+		        	try {
+						nserver.deregisterClient(nid);
+					} 
+		        	catch (RemoteException e) {
+		        		System.err.println("ERROR: Abnormal Deregistration From Server");
+						e.printStackTrace();
+					}
+		        }
+		    }));
 			
 			// Print message for the users
 			System.out.println("\nClient Successfully Started!");
