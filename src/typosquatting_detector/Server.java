@@ -14,9 +14,9 @@ public interface Server extends Remote {
 	
 	public void deregisterClient(String ikey) throws RemoteException;
 	
-	public ConcurrentHashMap<String, Client> getClientMap() throws RemoteException;
-					
-	public ConcurrentLinkedQueue<String> getURLQueue() throws RemoteException;
+	public String pollURLQueue() throws RemoteException;
+	
+	public boolean URLQueueIsEmpty() throws RemoteException;
 	
 	public void assignWork(String iurl) throws RemoteException;
 	
