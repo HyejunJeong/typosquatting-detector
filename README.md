@@ -30,6 +30,7 @@ git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
 * Java Development Kit 11 or higher
 * Google Chrome
 * [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches the version of your Chrome
+* Xvfb (only for Linux enviornments)
 
 #### Instructions
 
@@ -57,7 +58,7 @@ java -cp src:lib/\* typosquatting_detector.ClientImpl
 
 #### Virtual Machine for Running the Client
 
-The custom virtual machine appliance that is setup for running the client program is available at here (TBA). It is Ubuntu 18.04.3 LTS that includes OpenJDK, Chrome and Chrome Web Driver for Selenium. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. The password is ``1234``. It is recommended to import and run this appliance in VirtualBox.
+The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK, Chrome and Chrome Web Driver for Selenium. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. The password is ``1234``. It is recommended to import and run this appliance in VirtualBox.
 
 ## Program Architecture and Description
 
