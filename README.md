@@ -1,22 +1,107 @@
 # Distributed Typosquatting Detector
 
-Distributed Typosquatting Detector is YASSS
+Distributed Typosquatting Detector is (add brief introduction here)
 
 ## Getting Started
 
-TBA
+This project is divided into the server and client program. The instructions below are for Linux/Unix environments.
 
-### Distributable & Executable JAR File
+### Running the Server
 
-TBA
+1. Clone this repository to the location where you wish to run the server program. Since this is a private repository at the moment, you will have to use the special command as follows.
+```shell
+git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
+```
+It might prompt for your GitHub account password.
 
-### Checking Source Codes
+2. (TBA)
 
-TBA
+### Running the Clients
+
+> **Note:** You will have to **start the server first** before running the clients. You may run the client program in multiple machines.
+
+1. Clone this repository to the location where you wish to run the client program. Since this is a private repository at the moment, you will have to use the special command as follows.
+```shell
+git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
+```
+It might prompt for your GitHub account password.
+
+2. Go into the cloned directory.
+```shell
+cd typosquatting-detector
+```
+
+3. Compile ``Client.java``, ``ClientImpl.java`` and ``Server.java`` with their dependent jar files in the lib directory.
+```shell
+javac -cp lib/\* src/typosquatting_detector/Client.java src/typosquatting_detector/ClientImpl.java src/typosquatting_detector/Server.java
+```
+
+4. Run ``ClientImpl.class``.
+```shell
+java -cp src:lib/\* typosquatting_detector.ClientImpl
+```
+
+5. The program will ask for your local IP address, hosted server's IP address and chrome driver path. To run the server and clients within the localhost, enter all IP addresses as ``127.0.0.1``. The chrome driver path is usually located at ``/usr/local/bin/chromedriver``.
+
+#### Virtual Machine for Running the Client
+
+The custom virtual machine appliance that is setup for running the client program is available at here (TBA). It is Ubuntu 18.04.3 LTS that includes OpenJDK, Chrome and Chrome Web Driver for Selenium. It is recommended to import and run this appliance in VirtualBox.
+
+## Program Architecture and Description
+
+> **Note:** We need to provide some **high level details** about the architecture of our project. We need to answer why we chose a specific way of doing it, compared to all other possible ways. **Delete this when we are done**.
+
+(TBA: General overview. Why Java RMI? Why JSP?)
+
+### Server Program
+
+(TBA: An overview of the server side code.)
+
+#### Servlet
+
+(TBA)
+
+#### ServletListener
+
+(TBA)
+
+#### Server
+
+(TBA)
+
+#### ServerImpl
+
+(TBA)
+
+#### AdjacentKeys
+
+(TBA)
+
+### Client Program
+
+(TBA: An overview of the client side code.)
+
+#### Client
+
+(TBA)
+
+#### ClientImpl
+
+(TBA)
+
+### Third-Party Resources
+
+(TBA)
 
 ## Authors
 
+We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
+
 * **Henry Crain** - add yours here
+	* Worked on (TBA)
 * **Hye-Jun Jeong** - add yours here
+	* Worked on (TBA)
 * **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
+	* Worked on (TBA)
 * **Nicholas Reimer** - add yours here
+	* Worked on (TBA)
