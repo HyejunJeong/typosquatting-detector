@@ -8,11 +8,16 @@ This project is divided into the server and client program. The instructions bel
 
 ### Running the Server
 
+#### Requirements
+
+(TBA)
+
+#### Instructions
+
 1. Clone this repository to the location where you wish to run the server program. Since this is a private repository at the moment, you will have to use the special command as follows.
 ```shell
 git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
 ```
-It might prompt for your GitHub account password.
 
 2. (TBA)
 
@@ -20,11 +25,18 @@ It might prompt for your GitHub account password.
 
 > **Note:** You will have to **start the server first** before running the clients. You may run the client program in multiple machines.
 
+#### Requirements
+
+* Java Development Kit 11 or higher
+* Google Chrome
+* [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches the version of your Chrome
+
+#### Instructions
+
 1. Clone this repository to the location where you wish to run the client program. Since this is a private repository at the moment, you will have to use the special command as follows.
 ```shell
 git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
 ```
-It might prompt for your GitHub account password.
 
 2. Go into the cloned directory.
 ```shell
@@ -45,7 +57,7 @@ java -cp src:lib/\* typosquatting_detector.ClientImpl
 
 #### Virtual Machine for Running the Client
 
-The custom virtual machine appliance that is setup for running the client program is available at here (TBA). It is Ubuntu 18.04.3 LTS that includes OpenJDK, Chrome and Chrome Web Driver for Selenium. It is recommended to import and run this appliance in VirtualBox.
+The custom virtual machine appliance that is setup for running the client program is available at here (TBA). It is Ubuntu 18.04.3 LTS that includes OpenJDK, Chrome and Chrome Web Driver for Selenium. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. The password is ``1234``. It is recommended to import and run this appliance in VirtualBox.
 
 ## Program Architecture and Description
 
