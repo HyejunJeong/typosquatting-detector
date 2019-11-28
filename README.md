@@ -30,7 +30,7 @@ git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
 * Java Development Kit 11 or higher
 * Google Chrome
 * [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches the version of your Chrome
-* Xvfb (only for Linux enviornments)
+* Xvfb (only for Linux environments)
 
 #### Instructions
 
