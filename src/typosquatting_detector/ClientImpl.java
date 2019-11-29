@@ -25,7 +25,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -67,7 +66,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 						nserver.deregisterClient(nid);
 					} 
 		        	catch (RemoteException e) {
-		        		System.err.println("ERROR: Abnormal Deregistration From Server");
+		        		System.err.println("ERROR: Could Not Deregister From Server");
 						e.printStackTrace();
 					}
 		        }
@@ -105,22 +104,14 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		
 		WebDriver driver = new ChromeDriver(options);
 		
-		// Get URL Queue
-		ConcurrentLinkedQueue<String> urlQueue = server.getURLQueue();
-		
-		// Debug
-		for (String s : urlQueue) {
-			System.out.println(s);
-		}
-		
 		String fileName = "";
 		
 		// Print message for the users
 		System.out.println("\nStarting to Crawl URLs From the Queue...");
 		
-		while(!urlQueue.isEmpty()) {
+		while (!server.URLQueueIsEmpty()) {
 			// Get the URL
-			String url = urlQueue.poll();
+			String url = server.pollURLQueue();
 			
 			// Kludgy way of checking if site actually exists
 			try {
@@ -130,7 +121,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 					System.out.println("Address Not Found " + url);
 					continue;
 				}
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				System.out.println("Address Not Found " + url);
 				continue;
 			}
@@ -138,7 +130,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 			try {
 				driver.get("https://" + url);
-			} catch (TimeoutException e) {
+			}
+			catch (TimeoutException e) {
 				System.out.println("Address Not Found " + url);
 				continue;
 			}
@@ -165,7 +158,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			
 			try {
 				FileUtils.writeStringToFile(txtFileReport, txtReport, StandardCharsets.UTF_8.name());
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				System.err.printf("ERROR: Failed to Get Report for %s%n", url);
 			}
 			
@@ -173,15 +167,16 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			try {
 				istream = new SimpleRemoteInputStream(new FileInputStream(fileName));
 				server.sendFile(istream.export());
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				if(istream != null)
+			}
+			finally {
+				if (istream != null)
 					istream.close();
 			}
 			// Print message for the users
 			System.out.println("Done Crawling " + url);
-
 		}
 		
 		// Print message for the users

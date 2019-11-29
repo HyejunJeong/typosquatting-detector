@@ -80,23 +80,71 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	@Override
 	public void registerClient(String ikey, Client iclient) throws RemoteException {
 		clientMap.put(ikey, iclient);
+
+		// Print all registered client IDs
+		System.out.println("Registered Clients:");
+		if (clientMap.isEmpty()) {
+			System.out.println("None");
+		}
+		else {
+			for (String key : clientMap.keySet()) {
+				System.out.println("Client ID " + key);
+			}
+		}
 	}
 	
 	@Override
 	public void deregisterClient(String ikey) throws RemoteException {
-		// TODO: Not implemented yet
+		// Map returns null if no mapping was found for the key
+		if (clientMap.remove(ikey) == null) {
+			System.err.println("ERROR: Could Not Deregister Client");
+		}
+
+		// Print all registered client IDs
+		System.out.println("Registered Clients:");
+		if (clientMap.isEmpty()) {
+			System.out.println("None");
+		}
+		else {
+			for (String key : clientMap.keySet()) {
+				System.out.println("Client ID " + key);
+			}
+		}
 	}
 
 	@Override
-	public ConcurrentHashMap<String, Client> getClientMap() throws RemoteException {
-		return clientMap;
+	public String pollURLQueue() throws RemoteException {
+		return urlQueue.poll();
 	}
 
 	@Override
-	public ConcurrentLinkedQueue<String> getURLQueue() throws RemoteException {
-		return urlQueue;
+	public boolean URLQueueIsEmpty() throws RemoteException {
+		return urlQueue.isEmpty();
 	}
-		
+
+	@Override
+	public void assignWork(String iurl) throws RemoteException {
+		if (!clientMap.isEmpty()) {
+			// Generate typos and add them to queue
+			getTyposType1(iurl);
+			getTyposType2(iurl);
+			getTyposType3(iurl);
+			getTyposType4(iurl);
+			getTyposType5(iurl);
+
+			// TODO: Check the status of clients by pinging them before assigning work
+
+
+			// TODO: Create multiple threads for calling c.crawl() (Is this the best option)
+			// Assign work to all clients registered in the map
+			for (Client c : clientMap.values()) {
+				c.crawl();
+			}
+		}
+		else {
+			System.out.println("Clients Not Found! Please Re-Enter When Clients Are Registered");
+		}
+	}
 	
 	@Override
 	public void sendFile(RemoteInputStream ristream) throws IOException {
@@ -116,12 +164,14 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			ostream.flush();
 			
 			System.out.println("Finished writing file " + tempFile);
-		} finally {
+		}
+		finally {
 			try {
-				if(istream != null)
+				if (istream != null)
 					istream.close();
-			} finally {
-				if(ostream != null)
+			}
+			finally {
+				if (ostream != null)
 					ostream.close();
 			}
 		}
@@ -130,27 +180,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public void createReport() {
 		
 	}
-	
-	@Override
-	public void assignWork(String iurl) throws RemoteException {
-		if (!clientMap.isEmpty()) {
-			// Generate typos and add them to queue
-			getTyposType1(iurl);
-			getTyposType2(iurl);
-			getTyposType3(iurl);
-			getTyposType4(iurl);
-			getTyposType5(iurl);
-			
-			// Assign work to all clients registered in the map
-			for (Client c : clientMap.values()) {
-				c.crawl();
-			}
-		}
-		else {
-			System.out.println("Clients Not Found! Please Re-Enter When Clients Are Registered");
-		}
-	}
-	
+
 	// Type 1 Typos
 	// June Jeong
 	private void getTyposType1(String iurl) {
@@ -263,6 +293,4 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		}
 	}
 
-	
-	
 }

@@ -68,7 +68,7 @@ This project is divided into the server and client program. The instructions bel
 
 #### Virtual Machine for Running the Client
 
-The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK, Chrome and Chrome Web Driver for Selenium. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. The password is ``1234``. It is recommended to import and run this appliance in VirtualBox.
+The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK 11, Chrome, Chrome Web Driver for Selenium and Xvfb. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. The password is ``1234``. It is recommended to import and run this appliance in VirtualBox.
 
 ## Program Architecture and Description
 
