@@ -10,16 +10,26 @@ This project is divided into the server and client program. The instructions bel
 
 #### Requirements
 
-(TBA)
+* Apache Tomcat 9.0 or higher
+* JDK 11 or higher
 
 #### Instructions
 
 1. Clone this repository to the location where you wish to run the server program. Since this is a private repository at the moment, you will have to use the special command as follows.
-```shell
-git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
-```
 
-2. (TBA)
+    ```shell
+    git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
+    ```
+
+2. Copy and paste typosquatting-detector.war from the project directory to the webapps directory under your Tomcat home directory.
+    > You may need to use sudo to access the Tomcat subdirectories.
+
+3. In the Tomcat directory, run bin/startup.sh to start the server. Enter the IP address to bind the server to.
+    > It is recommended that you start Tomcat from the command line and not as a service because the server requires input from the console to start up.
+
+4. Go to [``localhost:8080/typosquatting-detector/search``](http://localhost:8080/typosquatting-detector/search) in a web browser. You should see the dashboard.
+
+5. Enter a URL to search for typo domains and click Search or press enter.
 
 ### Running the Clients
 
@@ -35,24 +45,24 @@ git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
 #### Instructions
 
 1. Clone this repository to the location where you wish to run the client program. Since this is a private repository at the moment, you will have to use the special command as follows.
-```shell
-git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
-```
+    ```shell
+    git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
+    ```
 
 2. Go into the cloned directory.
-```shell
-cd typosquatting-detector
-```
+    ```shell
+    cd typosquatting-detector
+    ```
 
 3. Compile ``Client.java``, ``ClientImpl.java`` and ``Server.java`` with their dependent jar files in the lib directory.
-```shell
-javac -cp lib/\* src/typosquatting_detector/Client.java src/typosquatting_detector/ClientImpl.java src/typosquatting_detector/Server.java
-```
+    ```shell
+    javac -cp lib/\* src/typosquatting_detector/Client.java src/typosquatting_detector/ClientImpl.java src/typosquatting_detector/Server.java
+    ```
 
 4. Run ``ClientImpl.class``.
-```shell
-java -cp src:lib/\* typosquatting_detector.ClientImpl
-```
+    ```shell
+    java -cp src:lib/\* typosquatting_detector.ClientImpl
+    ```
 
 5. The program will ask for your local IP address, hosted server's IP address and chrome driver path. To run the server and clients within the localhost, enter all IP addresses as ``127.0.0.1``. The chrome driver path is usually located at ``/usr/local/bin/chromedriver``.
 
@@ -110,7 +120,7 @@ The custom virtual machine appliance that is setup for running the client progra
 
 We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 
-* **Henry Crain** - add yours here
+* **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
 	* Worked on (TBA)
 * **Hye-Jun Jeong** - add yours here
 	* Worked on (TBA)
