@@ -56,7 +56,7 @@ public class ReportGenerator {
 		if(!dir.exists()) {
 			dir.mkdir();
 		}
-		System.out.println("usr.dir: "+path);
+		//System.out.println("usr.dir: "+path);
 		String url = getURL(f);
 		File screenshot = null;
 		BufferedImage image = null;
@@ -66,7 +66,7 @@ public class ReportGenerator {
 			image = ImageIO.read(bis);
 			screenshot = new File(path+"/"+url+".png");
 			ImageIO.write(image, "png", screenshot);
-			System.out.println("Image path: "+ getImgPath(screenshot));
+			//System.out.println("Image path: "+ getImgPath(screenshot));
 			bis.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -91,6 +91,7 @@ public class ReportGenerator {
 		htmlStringBuilder.append("<html>\n<head><title>Typosquatting Detector</title></head>\n");
 		htmlStringBuilder.append(txtStyle + btnStyle + imgStyle);
 		htmlStringBuilder.append("<h2 style=\"text-align: center;\">Server Report</h2><body>");
+		System.out.println("[Report Generator] createReportHeader");
 
 		return true;
 	}
@@ -107,6 +108,7 @@ public class ReportGenerator {
 		htmlStringBuilder.append("<img src="+ imgPath +"><br><br>\n");
 		htmlStringBuilder.append("<button onclick=\"myFunction"+globalElemID+"()\">View Source Code</button>\n");
 		htmlStringBuilder.append("<div id=\"myDIV"+globalElemID+"\">"+ sourceCode +"</div>\n");
+		System.out.println("[Report Generator] createReportMiddle");
 	
 		return true;
 	}
@@ -116,6 +118,7 @@ public class ReportGenerator {
 		htmlStringBuilder.append("</body></html>");
 		try {
 			WriteToFile(htmlStringBuilder.toString(),"report.html");
+			System.out.println("[Report Generator] createReportFooter");
 
 		} catch (IOException e) {
 			e.printStackTrace();
