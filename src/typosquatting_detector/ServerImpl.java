@@ -186,11 +186,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 					ostream.close();
 			}
 		}
-
-//		System.out.println("[ServerImpl] sendfile createReport");
-//		ReportGenerator rg = new ReportGenerator();
-//		rg.createReport();	
-
 	}
 	
 	// Type 1 Typos
