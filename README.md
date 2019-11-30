@@ -122,7 +122,7 @@ We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 
 * **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
 	* Worked on (TBA)
-* **Hye-Jun Jeong** - add yours here
+* **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong) - hye-jun.jeong@stonybrook.edu
 	* Worked on (TBA)
 * **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
 	* Worked on (TBA)
