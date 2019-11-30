@@ -1,7 +1,6 @@
 package typosquatting_detector;
 
 import org.apache.commons.io.FileUtils;
-import org.bson.Document;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
@@ -13,10 +12,6 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,8 +23,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -97,7 +90,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 	}
 	
 	@Override
-	public void crawl() throws RemoteException {	
+	public synchronized void crawl() throws RemoteException {	
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 		
@@ -116,9 +109,12 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		// Print message for the users
 		System.out.println("\nStarting to Crawl URLs From the Queue...");
 		
+		int counter = 0;
+		
 		while (!server.URLQueueIsEmpty()) {
 			// Get the URL
 			String url = server.pollURLQueue();
+			counter++;
 			
 			// Kludgy way of checking if site actually exists
 			try {
@@ -162,16 +158,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 
 			txtReport += url + "\n" + screenshot + "\n" + source;
 			
-			MongoDatabase db = new DatabaseConnection().getDb();
-			MongoCollection<Document> collection = db.getCollection("test");
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("url", url);
-			map.put("html", source);
-			map.put("screenshot", screenshot);
-			Document report = new Document(map);
-			collection.insertOne(report);
-			
-			
 			
 			try {
 				FileUtils.writeStringToFile(txtFileReport, txtReport, StandardCharsets.UTF_8.name());
@@ -194,10 +180,12 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			}
 			// Print message for the users
 			System.out.println("Done Crawling " + url);
+			
 		}
 		
 		// Print message for the users
 		System.out.println("Done Crawling All URLs From the Queue");
+		System.out.println("URLs crawled: " + counter);
 	}
 
 }

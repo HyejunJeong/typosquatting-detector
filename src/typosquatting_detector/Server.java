@@ -21,5 +21,5 @@ public interface Server extends Remote {
 	public void assignWork(String iurl) throws RemoteException;
 	
 	public void sendFile(RemoteInputStream ristream) throws IOException;
-			
+				
 }

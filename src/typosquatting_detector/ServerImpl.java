@@ -11,15 +11,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.bson.Document;
-
 import com.healthmarketscience.rmiio.RemoteInputStream;
 import com.healthmarketscience.rmiio.RemoteInputStreamClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -65,7 +58,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			
 			// Print message for the users
 			System.out.println("\nServer Successfully Started!");
-			
 		}
 		catch (RemoteException e) {
 			System.err.println("ERROR: Could Not Launch Server");
@@ -121,12 +113,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	}
 
 	@Override
-	public String pollURLQueue() throws RemoteException {
+	public synchronized String pollURLQueue() throws RemoteException {
 		return urlQueue.poll();
 	}
 
 	@Override
-	public boolean URLQueueIsEmpty() throws RemoteException {
+	public synchronized boolean URLQueueIsEmpty() throws RemoteException {
 		return urlQueue.isEmpty();
 	}
 
@@ -146,8 +138,21 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			// TODO: Create multiple threads for calling c.crawl() (Is this the best option)
 			// Assign work to all clients registered in the map
 			for (Client c : clientMap.values()) {
-				c.crawl();
+				Crawler crawler = new Crawler(c);
+				crawler.start();
 			}
+			
+			
+			while(!this.URLQueueIsEmpty()) {		//Check every 1 second if the queue is empty
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			ReportGenerator rg = new ReportGenerator();
+			rg.createReport();
+
 		}
 		else {
 			System.out.println("Clients Not Found! Please Re-Enter When Clients Are Registered");
@@ -158,9 +163,16 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public void sendFile(RemoteInputStream ristream) throws IOException {
 		InputStream istream = RemoteInputStreamClient.wrap(ristream);
 		FileOutputStream ostream = null;
-		
+
+		String path = System.getProperty("user.dir")+"/reports/";
+		File dir = new File(path);
+		if(!dir.exists()) {
+			dir.mkdir();
+		}
+
+
 		try {
-			File tempFile = File.createTempFile("receivedFile_", ".txt");
+			File tempFile = File.createTempFile("receivedFile_", ".txt", dir);
 			
 			ostream = new FileOutputStream(tempFile);
 			System.out.println("Writing file ...");
@@ -185,10 +197,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		}
 	}
 	
-	public void createReport() {
-		
-	}
-
 	// Type 1 Typos
 	// June Jeong
 	private void getTyposType1(String iurl) {
@@ -301,4 +309,22 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		}
 	}
 
+}
+
+class Crawler extends Thread {
+	
+	private Client client;
+	
+	public Crawler(Client client) {
+		this.client = client;
+	}
+
+	@Override
+	public void run() {
+		try {
+			client.crawl();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 }
