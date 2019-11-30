@@ -169,7 +169,7 @@ public class ReportGenerator {
 		 * write the not-repeated part
 		 * while(queue is not empty)
 		 * 		repeat the need-to-be-repeated part of html */
-		String path = System.getProperty("user.dir");
+		String path = System.getProperty("user.dir")+"/reports/";
 		File dir = new File(path);
 		
 		File[] files = readFilesFromFolder(dir);

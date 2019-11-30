@@ -11,9 +11,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
 import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,7 +25,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -41,21 +38,39 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		// Print message for the users
 		System.out.println("Starting Client...");
 		
-		// Ask for local chrome driver path
+		// Ask for IP addresses and local chrome driver path
 		Scanner scanner = new Scanner(System.in);
-		System.out.print("\nPlease Enter the Path to Chrome Driver: ");
+		System.out.print("\nPlease Enter Your Local IP Address: ");
+		String caddr = scanner.nextLine();
+		System.out.print("Please Enter the Hosted Server's Local IP Address: ");
+		String saddr = scanner.nextLine();
+		System.out.print("Please Enter the Path to Chrome Driver: ");
 		chromeDriverPath = scanner.nextLine();
 		scanner.close();
 		
 		try {
 			// Get remote server object
-			Registry registry = LocateRegistry.getRegistry(1099);
+			System.setProperty("java.rmi.server.hostname", caddr);
+			Registry registry = LocateRegistry.getRegistry(saddr, 1099);
 			Server nserver = (Server) registry.lookup("Server");
 			
 			// Create new client object
 			String nid = UUID.randomUUID().toString();
 			Client nclient = new ClientImpl(nserver, nid);
 			nserver.registerClient(nid, nclient);
+			
+			// Add shutdown hook
+			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		        public void run() {
+		        	try {
+						nserver.deregisterClient(nid);
+					} 
+		        	catch (RemoteException e) {
+		        		System.err.println("ERROR: Could Not Deregister From Server");
+						e.printStackTrace();
+					}
+		        }
+		    }));
 			
 			// Print message for the users
 			System.out.println("\nClient Successfully Started!");
@@ -89,22 +104,14 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		
 		WebDriver driver = new ChromeDriver(options);
 		
-		// Get URL Queue
-		ConcurrentLinkedQueue<String> urlQueue = server.getURLQueue();
-		
-		// Debug
-		for (String s : urlQueue) {
-			System.out.println(s);
-		}
-		
 		String fileName = "";
 		
 		// Print message for the users
 		System.out.println("\nStarting to Crawl URLs From the Queue...");
 		
-		while(!urlQueue.isEmpty()) {
+		while (!server.URLQueueIsEmpty()) {
 			// Get the URL
-			String url = urlQueue.poll();
+			String url = server.pollURLQueue();
 			
 			// Kludgy way of checking if site actually exists
 			try {
@@ -114,7 +121,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 					System.out.println("Address Not Found " + url);
 					continue;
 				}
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				System.out.println("Address Not Found " + url);
 				continue;
 			}
@@ -122,7 +130,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 			try {
 				driver.get("https://" + url);
-			} catch (TimeoutException e) {
+			}
+			catch (TimeoutException e) {
 				System.out.println("Address Not Found " + url);
 				continue;
 			}
@@ -149,7 +158,8 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			
 			try {
 				FileUtils.writeStringToFile(txtFileReport, txtReport, StandardCharsets.UTF_8.name());
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				System.err.printf("ERROR: Failed to Get Report for %s%n", url);
 			}
 			
@@ -157,15 +167,16 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			try {
 				istream = new SimpleRemoteInputStream(new FileInputStream(fileName));
 				server.sendFile(istream.export());
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
-			} finally {
-				if(istream != null)
+			}
+			finally {
+				if (istream != null)
 					istream.close();
 			}
 			// Print message for the users
 			System.out.println("Done Crawling " + url);
-
 		}
 		
 		// Print message for the users

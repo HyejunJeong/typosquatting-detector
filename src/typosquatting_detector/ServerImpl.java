@@ -1,37 +1,23 @@
 package typosquatting_detector;
 
-import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.stream.Stream;
-
-import javax.imageio.ImageIO;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-
 import com.healthmarketscience.rmiio.RemoteInputStream;
 import com.healthmarketscience.rmiio.RemoteInputStreamClient;
-
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.StringBuilder;
-import java.net.MalformedURLException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 public class ServerImpl extends UnicastRemoteObject implements Server {
 
@@ -43,15 +29,37 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		// Print message for the users
 		System.out.println("Starting Server...");
 		
-		// Bind remote server object with queue
+		// Ask for local IP address to host the server
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("\nPlease Enter Your Local IP Address to Host the Server: ");
+		String address = scanner.nextLine();
+		scanner.close();
+		
 		try {
+			// Bind remote server object
+			System.setProperty("java.rmi.server.hostname", address);
+			Registry registry = LocateRegistry.createRegistry(1099);
 			server = new ServerImpl();
-			Naming.rebind("Server", server);
+			registry.rebind("Server", server);
+			
+			// Add shutdown hook
+			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		        public void run() {
+		        	try {
+		        		registry.unbind("Server");
+						UnicastRemoteObject.unexportObject(registry, true);
+					} 
+		        	catch (RemoteException | NotBoundException e) {
+		        		System.err.println("ERROR: Server Program Abnormally Terminated!");
+						e.printStackTrace();
+					}
+		        }
+		    }));
 			
 			// Print message for the users
-			System.out.println("Server Successfully Started!");
+			System.out.println("\nServer Successfully Started!");
 		}
-		catch (RemoteException | MalformedURLException e) {
+		catch (RemoteException e) {
 			System.err.println("ERROR: Could Not Launch Server");
 			e.printStackTrace();
 		}
@@ -72,34 +80,90 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	@Override
 	public void registerClient(String ikey, Client iclient) throws RemoteException {
 		clientMap.put(ikey, iclient);
+
+		// Print all registered client IDs
+		System.out.println("Registered Clients:");
+		if (clientMap.isEmpty()) {
+			System.out.println("None");
+		}
+		else {
+			for (String key : clientMap.keySet()) {
+				System.out.println("Client ID " + key);
+			}
+		}
 	}
 	
 	@Override
 	public void deregisterClient(String ikey) throws RemoteException {
-		// TODO: Not implemented yet
+		// Map returns null if no mapping was found for the key
+		if (clientMap.remove(ikey) == null) {
+			System.err.println("ERROR: Could Not Deregister Client");
+		}
+
+		// Print all registered client IDs
+		System.out.println("Registered Clients:");
+		if (clientMap.isEmpty()) {
+			System.out.println("None");
+		}
+		else {
+			for (String key : clientMap.keySet()) {
+				System.out.println("Client ID " + key);
+			}
+		}
 	}
 
 	@Override
-	public ConcurrentHashMap<String, Client> getClientMap() throws RemoteException {
-		return clientMap;
+	public String pollURLQueue() throws RemoteException {
+		return urlQueue.poll();
 	}
 
 	@Override
-	public ConcurrentLinkedQueue<String> getURLQueue() throws RemoteException {
-		return urlQueue;
+	public boolean URLQueueIsEmpty() throws RemoteException {
+		return urlQueue.isEmpty();
 	}
-		
+
+	@Override
+	public void assignWork(String iurl) throws RemoteException {
+		if (!clientMap.isEmpty()) {
+			// Generate typos and add them to queue
+			getTyposType1(iurl);
+			getTyposType2(iurl);
+			getTyposType3(iurl);
+			getTyposType4(iurl);
+			getTyposType5(iurl);
+
+			// TODO: Check the status of clients by pinging them before assigning work
+
+
+			// TODO: Create multiple threads for calling c.crawl() (Is this the best option)
+			// Assign work to all clients registered in the map
+			for (Client c : clientMap.values()) {
+				c.crawl();
+			}
+			System.out.println("[ServerImpl] createReport");
+			ReportGenerator rg = new ReportGenerator();
+			rg.createReport();	
+
+		}
+		else {
+			System.out.println("Clients Not Found! Please Re-Enter When Clients Are Registered");
+		}
+	}
 	
 	@Override
 	public void sendFile(RemoteInputStream ristream) throws IOException {
 		InputStream istream = RemoteInputStreamClient.wrap(ristream);
 		FileOutputStream ostream = null;
 
-		String pathString = System.getProperty("user.dir");
-		File directory = new File(pathString);
+		String path = System.getProperty("user.dir")+"/reports/";
+		File dir = new File(path);
+		if(!dir.exists()) {
+			dir.mkdir();
+		}
+
 
 		try {
-			File tempFile = File.createTempFile("receivedFile_", ".txt", directory);
+			File tempFile = File.createTempFile("receivedFile_", ".txt", dir);
 			
 			ostream = new FileOutputStream(tempFile);
 			System.out.println("Writing file ...");
@@ -111,51 +175,22 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			ostream.flush();
 			
 			System.out.println("Finished writing file " + tempFile);
-		} finally {
+		}
+		finally {
 			try {
-				if(istream != null)
+				if (istream != null)
 					istream.close();
-			} finally {
-				if(ostream != null)
+			}
+			finally {
+				if (ostream != null)
 					ostream.close();
 			}
 		}
-		System.out.println("[ServerImpl] createReport");
-		ReportGenerator rg = new ReportGenerator();
-		rg.createReport();	
 
-	}
-//	
-//	@Override
-//	public void createReport() {
-//
-//		/* signal server to done crawling all urls from the queue 
-//		 * if(all done)
-//		 * 		rg.createReport();
-//		 * */
-//		System.out.println("[ServerImpl] createReport");
+//		System.out.println("[ServerImpl] sendfile createReport");
 //		ReportGenerator rg = new ReportGenerator();
 //		rg.createReport();	
-//	}
-	
-	@Override
-	public void assignWork(String iurl) throws RemoteException {
-		if (!clientMap.isEmpty()) {
-			// Generate typos and add them to queue
-			getTyposType1(iurl);
-			getTyposType2(iurl);
-			getTyposType3(iurl);
-			getTyposType4(iurl);
-			getTyposType5(iurl);
-			
-			// Assign work to all clients registered in the map
-			for (Client c : clientMap.values()) {
-				c.crawl();
-			}
-		}
-		else {
-			System.out.println("Clients Not Found! Please Re-Enter When Clients Are Registered");
-		}
+
 	}
 	
 	// Type 1 Typos
@@ -270,6 +305,4 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		}
 	}
 
-	
-	
 }
