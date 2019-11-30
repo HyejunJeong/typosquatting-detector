@@ -1,4 +1,4 @@
- package typosquatting_detector;
+package typosquatting_detector;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -13,16 +13,15 @@ public class Servlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	if(request.getParameter("input") != null && request.getParameter("input") != "" && request.getParameter("input").indexOf(' ') == -1) {
 			try {
-				Server.main(new String[] {request.getParameter("input")});
-//				Client.main(new String[] {});
-//				request.setAttribute("output", Server.getTypos());
+				ServerImpl.getServer().assignWork(request.getParameter("input"));
+//				request.setAttribute("output", ServerImpl.getResults());
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
         }
         else {
-            request.setAttribute("output", "No input received!");
+            request.setAttribute("output", "No Input Received!");
         }
         getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
     }

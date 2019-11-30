@@ -3,11 +3,11 @@ package typosquatting_detector;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Adjacent {
+public class AdjacentKeys {
 	
 	private Map<String, String[]> map = new HashMap<>();
 	
-	public Adjacent() {
+	public AdjacentKeys() {
 		this.createMap();
 	}
 	
