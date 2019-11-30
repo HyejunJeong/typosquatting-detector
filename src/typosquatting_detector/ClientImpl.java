@@ -109,12 +109,9 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		// Print message for the users
 		System.out.println("\nStarting to Crawl URLs From the Queue...");
 		
-		int counter = 0;
-		
 		while (!server.URLQueueIsEmpty()) {
 			// Get the URL
 			String url = server.pollURLQueue();
-			counter++;
 			
 			// Kludgy way of checking if site actually exists
 			try {
@@ -185,7 +182,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		
 		// Print message for the users
 		System.out.println("Done Crawling All URLs From the Queue");
-		System.out.println("URLs crawled: " + counter);
 	}
 
 }
