@@ -94,9 +94,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public void sendFile(RemoteInputStream ristream) throws IOException {
 		InputStream istream = RemoteInputStreamClient.wrap(ristream);
 		FileOutputStream ostream = null;
-		
+
+		String pathString = System.getProperty("user.dir");
+		File directory = new File(pathString);
+
 		try {
-			File tempFile = File.createTempFile("receivedFile_", ".txt");
+			File tempFile = File.createTempFile("receivedFile_", ".txt", directory);
 			
 			ostream = new FileOutputStream(tempFile);
 			System.out.println("Writing file ...");
@@ -117,11 +120,23 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 					ostream.close();
 			}
 		}
+		System.out.println("[ServerImpl] createReport");
+		ReportGenerator rg = new ReportGenerator();
+		rg.createReport();	
+
 	}
-	
-	public void createReport() {
-		
-	}
+//	
+//	@Override
+//	public void createReport() {
+//
+//		/* signal server to done crawling all urls from the queue 
+//		 * if(all done)
+//		 * 		rg.createReport();
+//		 * */
+//		System.out.println("[ServerImpl] createReport");
+//		ReportGenerator rg = new ReportGenerator();
+//		rg.createReport();	
+//	}
 	
 	@Override
 	public void assignWork(String iurl) throws RemoteException {
