@@ -140,7 +140,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			for (Client c : clientMap.values()) {
 				c.crawl();
 			}
-			System.out.println("[ServerImpl] createReport");
+			
 			ReportGenerator rg = new ReportGenerator();
 			rg.createReport();	
 

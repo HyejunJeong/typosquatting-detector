@@ -91,7 +91,6 @@ public class ReportGenerator {
 		htmlStringBuilder.append("<html>\n<head><title>Typosquatting Detector</title></head>\n");
 		htmlStringBuilder.append(txtStyle + btnStyle + imgStyle);
 		htmlStringBuilder.append("<h2 style=\"text-align: center;\">Server Report</h2><body>");
-		System.out.println("[Report Generator] createReportHeader");
 
 		return true;
 	}
@@ -108,7 +107,6 @@ public class ReportGenerator {
 		htmlStringBuilder.append("<img src="+ imgPath +"><br><br>\n");
 		htmlStringBuilder.append("<button onclick=\"myFunction"+globalElemID+"()\">View Source Code</button>\n");
 		htmlStringBuilder.append("<div id=\"myDIV"+globalElemID+"\">"+ sourceCode +"</div>\n");
-		System.out.println("[Report Generator] createReportMiddle");
 	
 		return true;
 	}
@@ -118,7 +116,6 @@ public class ReportGenerator {
 		htmlStringBuilder.append("</body></html>");
 		try {
 			WriteToFile(htmlStringBuilder.toString(),"report.html");
-			System.out.println("[Report Generator] createReportFooter");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -161,14 +158,6 @@ public class ReportGenerator {
 	}
 	
 	public void createReport() {
-		
-		/* create a queue to store File objects for each files
-		 * while(dir is not empty)
-		 * 		add to the queue
-		 * 		delete already processed txt
-		 * write the not-repeated part
-		 * while(queue is not empty)
-		 * 		repeat the need-to-be-repeated part of html */
 		String path = System.getProperty("user.dir")+"/reports/";
 		File dir = new File(path);
 		
