@@ -13,8 +13,10 @@ public class Servlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	if(request.getParameter("input") != null && request.getParameter("input") != "" && request.getParameter("input").indexOf(' ') == -1) {
 			try {
-				ServerImpl.getServer().assignWork(request.getParameter("input"));
-//				request.setAttribute("output", ServerImpl.getResults());
+				Server server = ServerImpl.getServer();
+				server.setReportPath(getServletContext().getRealPath("/"));
+				server.assignWork(request.getParameter("input"));
+				request.setAttribute("report", "report.html");
 			}
 			catch (Exception e) {
 				e.printStackTrace();

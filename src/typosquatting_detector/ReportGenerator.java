@@ -14,13 +14,19 @@ import org.apache.commons.text.StringEscapeUtils;
 
 public class ReportGenerator {
 	
-	static String url;
-	static String imgString;
-	static String source;
+	private static String url;
+	private static String imgString;
+	private static String source;
+	
+	private String path;
 	
 	File screenshot;
 
 	public ReportGenerator () {	}
+	
+	public void setPath(String path) {
+		this.path = path;
+	}
 
 	private static String readFileToString(File f) {
 		//String path = tempFile.getPath();
@@ -50,13 +56,13 @@ public class ReportGenerator {
 		return img.getPath();
 	}
 	
-	private static File convert2png(File f, String base64) {
-		String path = System.getProperty("user.dir")+"/images/";
+	private static File convert2png(File f, String base64, String basePath) {
+		String path = basePath + "images/";
 		File dir = new File(path);
 		if(!dir.exists()) {
 			dir.mkdir();
 		}
-		//System.out.println("usr.dir: "+path);
+		
 		String url = getURL(f);
 		File screenshot = null;
 		BufferedImage image = null;
@@ -66,7 +72,6 @@ public class ReportGenerator {
 			image = ImageIO.read(bis);
 			screenshot = new File(path+"/"+url+".png");
 			ImageIO.write(image, "png", screenshot);
-			//System.out.println("Image path: "+ getImgPath(screenshot));
 			bis.close();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -96,8 +101,8 @@ public class ReportGenerator {
 		return true;
 	}
 	
-	private static boolean createReportMiddle(File f) {
-		String imgPath = getImgPath(convert2png(f, imgString));
+	private static boolean createReportMiddle(File f, String path) {
+		String imgPath = getImgPath(convert2png(f, imgString, path));
 		String sourceCode = StringEscapeUtils.escapeHtml4(getSource(f));
 
 		htmlStringBuilder.append("<script>\n function myFunction"+globalElemID+"() {\n");
@@ -114,10 +119,10 @@ public class ReportGenerator {
 	}
 	
 	
-	private static boolean createReportFooter(){
+	private static boolean createReportFooter(String path){
 		htmlStringBuilder.append("</body></html>");
 		try {
-			WriteToFile(htmlStringBuilder.toString(),"report.html");
+			WriteToFile(htmlStringBuilder.toString(), "report.html", path);
 			System.out.println("[Report Generator] createReportFooter");
 
 		} catch (IOException e) {
@@ -126,13 +131,12 @@ public class ReportGenerator {
 		return true;
 	}
 	
-	public static void WriteToFile(String fileContent, String fileName) throws IOException {
-		String path = System.getProperty("user.dir");
+	public static void WriteToFile(String fileContent, String fileName, String path) throws IOException {
 		String tempFile = path + File.separator + fileName;
 		File report = new File(tempFile);
 		
 		if(report.exists()) {
-			File newFileName = new File(path + File.separator+fileName);
+			File newFileName = new File(tempFile);
 			report.renameTo(newFileName);
 		}
 		FileUtils.writeStringToFile(report, fileContent);
@@ -161,18 +165,20 @@ public class ReportGenerator {
 	}
 	
 	public void createReport() {
-		String path = System.getProperty("user.dir")+"/reports/";
-		File dir = new File(path);
+		String filePath = path + "reports/";
+		
+		File dir = new File(filePath);
+		
 		
 		File[] files = readFilesFromFolder(dir);
 
 		createReportHeader();		
 		for(int i = 0; i < files.length; i ++) {
 			readFileToString(files[i]);
-			createReportMiddle(files[i]);
+			createReportMiddle(files[i], path);
 			globalElemID ++;
 		}
-		createReportFooter();
+		createReportFooter(path);
 
 	}
 }

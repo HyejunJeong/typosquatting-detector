@@ -25,6 +25,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	
 	private static Server server;
 	
+	private String reportPath;
+	
 	public static void init() {
 		// Print message for the users
 		System.out.println("Starting Server...");
@@ -75,6 +77,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public ServerImpl() throws RemoteException {
 		clientMap = new ConcurrentHashMap<String, Client>();
 		urlQueue = new ConcurrentLinkedQueue<String>();
+	}
+	
+	@Override
+	public void setReportPath(String path) throws RemoteException {
+		this.reportPath = path;
 	}
 	
 	@Override
@@ -142,6 +149,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			}
 			
 			ReportGenerator rg = new ReportGenerator();
+			rg.setPath(reportPath);
 			rg.createReport();	
 
 		}
@@ -155,7 +163,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		InputStream istream = RemoteInputStreamClient.wrap(ristream);
 		FileOutputStream ostream = null;
 
-		String path = System.getProperty("user.dir")+"/reports/";
+		String path = reportPath + "reports/";
 		File dir = new File(path);
 		if(!dir.exists()) {
 			dir.mkdir();

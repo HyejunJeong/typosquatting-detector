@@ -32,6 +32,22 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private static final String[] CHROME_OPTS = {
+		"--headless",
+		"--disable-gpu",
+		"--window-size=1920,1200", 
+		"--ignore-certificate-errors",
+		"--silent",
+		"--remote-debugging-port=8081",
+		"--no-sandbox",
+		"--disable-infobars", 
+		"--disable-dev-shm-usage",
+		"--disable-browser-side-navigation",
+		"--disable-gpu",
+		"--disable-features=VizDisplayCompositor"
+	};
+			
+	
 	private static String chromeDriverPath;
 	
 	public static void main(String args[]) {
@@ -95,7 +111,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 		
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--silent","--remote-debugging-port=8081");
+		options.addArguments(CHROME_OPTS);
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		
 		LoggingPreferences logPrefs = new LoggingPreferences();

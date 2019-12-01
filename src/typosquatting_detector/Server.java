@@ -10,6 +10,8 @@ import com.healthmarketscience.rmiio.RemoteInputStream;
 
 public interface Server extends Remote {
 	
+	public void setReportPath(String path) throws RemoteException;
+	
 	public void registerClient(String ikey, Client iclient) throws RemoteException;
 	
 	public void deregisterClient(String ikey) throws RemoteException;
