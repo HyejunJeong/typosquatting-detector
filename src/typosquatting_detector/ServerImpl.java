@@ -120,12 +120,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	}
 
 	@Override
-	public String pollURLQueue() throws RemoteException {
+	public synchronized String pollURLQueue() throws RemoteException {
 		return urlQueue.poll();
 	}
 
 	@Override
-	public boolean URLQueueIsEmpty() throws RemoteException {
+	public synchronized boolean URLQueueIsEmpty() throws RemoteException {
 		return urlQueue.isEmpty();
 	}
 
@@ -145,12 +145,21 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			// TODO: Create multiple threads for calling c.crawl() (Is this the best option)
 			// Assign work to all clients registered in the map
 			for (Client c : clientMap.values()) {
-				c.crawl();
+				Crawler crawler = new Crawler(c);
+				crawler.start();
 			}
 			
+			
+			while(!this.URLQueueIsEmpty()) {		//Check every 1 second if the queue is empty
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 			ReportGenerator rg = new ReportGenerator();
 			rg.setPath(reportPath);
-			rg.createReport();	
+			rg.createReport();
 
 		}
 		else {
@@ -308,4 +317,22 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		}
 	}
 
+}
+
+class Crawler extends Thread {
+	
+	private Client client;
+	
+	public Crawler(Client client) {
+		this.client = client;
+	}
+
+	@Override
+	public void run() {
+		try {
+			client.crawl();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 }

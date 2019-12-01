@@ -106,7 +106,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 	}
 	
 	@Override
-	public void crawl() throws RemoteException {	
+	public synchronized void crawl() throws RemoteException {	
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 		
@@ -193,6 +193,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 			}
 			// Print message for the users
 			System.out.println("Done Crawling " + url);
+			
 		}
 		
 		// Print message for the users
