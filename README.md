@@ -128,5 +128,5 @@ We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 	* Worked on (TBA)
 * **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
 	* Worked on (TBA)
-* **Nicholas Reimer** - [nreimer](https://github.com/msukmoon) - nicholas.reimer@stonybrook.edu
+* **Nicholas Reimer** - [nreimer](https://github.com/nreimer) - nicholas.reimer@stonybrook.edu
 	* Worked on (TBA)
