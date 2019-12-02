@@ -179,6 +179,5 @@ public class ReportGenerator {
 			globalElemID ++;
 		}
 		createReportFooter(path);
-
 	}
 }
