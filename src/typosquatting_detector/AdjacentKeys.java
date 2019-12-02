@@ -81,5 +81,4 @@ public class AdjacentKeys {
 		String [] arr63 = {"*", "i", "o", ")"};					this.map.put("(", arr63);
 		String [] arr64 = {"(", "o", "p", "_"};					this.map.put(")", arr64);
 	}
-	
 }

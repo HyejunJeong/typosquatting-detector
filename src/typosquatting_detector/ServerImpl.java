@@ -25,6 +25,8 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	
 	private static Server server;
 	
+	private String reportPath;
+	
 	public static void init() {
 		// Print message for the users
 		System.out.println("Starting Server...");
@@ -78,6 +80,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	}
 	
 	@Override
+	public void setReportPath(String path) throws RemoteException {
+		this.reportPath = path;
+	}
+	
+	@Override
 	public void registerClient(String ikey, Client iclient) throws RemoteException {
 		clientMap.put(ikey, iclient);
 
@@ -113,12 +120,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	}
 
 	@Override
-	public String pollURLQueue() throws RemoteException {
+	public synchronized String pollURLQueue() throws RemoteException {
 		return urlQueue.poll();
 	}
 
 	@Override
-	public boolean URLQueueIsEmpty() throws RemoteException {
+	public synchronized boolean URLQueueIsEmpty() throws RemoteException {
 		return urlQueue.isEmpty();
 	}
 
@@ -138,11 +145,21 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			// TODO: Create multiple threads for calling c.crawl() (Is this the best option)
 			// Assign work to all clients registered in the map
 			for (Client c : clientMap.values()) {
-				c.crawl();
+				Crawler crawler = new Crawler(c);
+				crawler.start();
 			}
 			
+			
+			while(!this.URLQueueIsEmpty()) {		//Check every 1 second if the queue is empty
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 			ReportGenerator rg = new ReportGenerator();
-			rg.createReport();	
+			rg.setPath(reportPath);
+			rg.createReport();
 
 		}
 		else {
@@ -155,7 +172,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		InputStream istream = RemoteInputStreamClient.wrap(ristream);
 		FileOutputStream ostream = null;
 
-		String path = System.getProperty("user.dir")+"/reports/";
+		String path = reportPath + "reports/";
 		File dir = new File(path);
 		if(!dir.exists()) {
 			dir.mkdir();
@@ -300,4 +317,22 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		}
 	}
 
+}
+
+class Crawler extends Thread {
+	
+	private Client client;
+	
+	public Crawler(Client client) {
+		this.client = client;
+	}
+
+	@Override
+	public void run() {
+		try {
+			client.crawl();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 }
