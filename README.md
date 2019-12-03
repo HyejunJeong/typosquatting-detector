@@ -77,6 +77,10 @@ The custom virtual machine appliance that is setup for running the client progra
 > **Note:** We need to provide some **high level details** about the architecture of our project. We need to answer why we chose a specific way of doing it, compared to all other possible ways. **Delete this when we are done**.
 
 (TBA: General overview. Why Java RMI? Why JSP?)
+Used rmi so it is distributed.
+JSP so we could write it all in java?
+
+//Add more detail for these ^^
 		              
 
 ### Server Program
@@ -87,7 +91,7 @@ The Server as a whole functions as the Master Node and the Web Dashboard. The Se
 #### Servlet
 
 (TBA)
-This is our Web Dashboard. It displays a form where a user can enter a URL. When the user presses the button, the servlet gives the URL to the Server. Once the Server is finished assigning all the URL typos to the Worker Nodes, the servlet displays the results. 
+This is our Web Dashboard. It displays our index.jsp file. Initiall, index.jsp contains a form where a user can enter a URL. When the user presses the button, the servlet gives the URL to the Server. Once the Server is finished assigning all the URL typos to the Worker Nodes, the servlet displays the results. 
 
 #### ServletListener
 
@@ -115,7 +119,7 @@ ReportGenerator class collects the reports received from the worker nodes. Each 
 ### Client Program
 
 (TBA: An overview of the client side code.)
-The Client as a whole serves as the Worker Node.
+The Client as a whole serves as the Worker Node. When run, it connects to the server, and reports itself to the Master Node, then waits to be assigned a URL to crawl. Once it receives a URL from the Master Node, it uses headless chrome to check if that URL exists, and if it does, take a screenshot and collect the html code, then report all of this back to the Master Node. 
 
 #### Client
 
@@ -132,6 +136,10 @@ The Worker Node takes a screenshot in a string format so that each url correspon
 ### Third-Party Resources
 
 (TBA)
+Tomcat?
+rmi?
+headless chrome?
+
 
 
 ## Authors
