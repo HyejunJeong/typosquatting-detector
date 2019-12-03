@@ -139,10 +139,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			getTyposType4(iurl);
 			getTyposType5(iurl);
 
-			// TODO: Check the status of clients by pinging them before assigning work
-
-
-			// TODO: Create multiple threads for calling c.crawl() (Is this the best option)
+			// Create multiple threads for calling c.crawl()
 			// Assign work to all clients registered in the map
 			for (Client c : clientMap.values()) {
 				Crawler crawler = new Crawler(c);
@@ -156,10 +153,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 					e.printStackTrace();
 				}
 			}
+			
 			ReportGenerator rg = new ReportGenerator();
 			rg.setPath(reportPath);
 			rg.createReport();
-
 		}
 		else {
 			System.out.println("Clients Not Found! Please Re-Enter When Clients Are Registered");
@@ -181,7 +178,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 			File tempFile = File.createTempFile("receivedFile_", ".txt", dir);
 			
 			ostream = new FileOutputStream(tempFile);
-			System.out.println("Writing file ...");
+			System.out.println("Writing File ...");
 			
 			byte[] buf = new byte[1024];
 			int bytesRead = 0;
@@ -189,7 +186,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 				ostream.write(buf, 0, bytesRead);
 			ostream.flush();
 			
-			System.out.println("Finished writing file " + tempFile);
+			System.out.println("Done Writing File " + tempFile);
 		}
 		finally {
 			try {

@@ -6,30 +6,54 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
 public class ReportGenerator {
 	
-	private static String url;
-	private static String imgString;
-	private static String source;
+	private static int globalElemID;
 	
+	public static void init() {
+		globalElemID = 1;
+	}
+	
+	private StringBuilder htmlStringBuilder;
+	private String restJS;
+	private String url;
+	private String imgString;
+	private String source;
 	private String path;
-	
-	File screenshot;
 
-	public ReportGenerator () {	}
+	public ReportGenerator () {
+		htmlStringBuilder = new StringBuilder();
+		restJS = "\");\n" + 
+				"  if (x.style.display === \"block\") {\n" + 
+				"    x.style.display = \"none\";\n" + 
+				"  } else {\n" + 
+				"    x.style.display = \"block\";\n" + 
+				"  }\n}\n</script>\n";
+	}
 	
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
+	public void createReport() {		
+		File dir = new File(path + "reports/");
+		File[] files = readFilesFromFolder(dir);
 
-	private static String readFileToString(File f) {
+		createReportHeader();
+		for(int i = 0; i < files.length; i ++) {
+			readFileToString(files[i]);
+			createReportMiddle(files[i], path);
+			globalElemID++;
+		}
+		createReportFooter(path);
+	}
+
+	private String readFileToString(File f) {
 		String content = "";
 		try {
 			content = FileUtils.readFileToString(f);
@@ -44,19 +68,19 @@ public class ReportGenerator {
 		return content;
 	}
 
-	private static String getURL(File f) {
+	private String getURL(File f) {
 		return url;
 	}
 	
-	private static String getSource(File f) {
+	private String getSource(File f) {
 		return source;
 	}
 	
-	private static String getImgPath(File img) {
+	private String getImgPath(File img) {
 		return img.getPath();
 	}
 	
-	private static File convert2png(File f, String base64, String basePath) {
+	private File convert2png(File f, String base64, String basePath) {
 		String path = basePath + "images/";
 		File dir = new File(path);
 		if(!dir.exists()) {
@@ -78,17 +102,8 @@ public class ReportGenerator {
 		}
 		return screenshot;
 	}
-	
-	static StringBuilder htmlStringBuilder = new StringBuilder();
-	public static int globalElemID = 1;
-	static String restJS = "\");\n" + 
-			"  if (x.style.display === \"block\") {\n" + 
-			"    x.style.display = \"none\";\n" + 
-			"  } else {\n" + 
-			"    x.style.display = \"block\";\n" + 
-			"  }\n}\n</script>\n";
 
-	private static boolean createReportHeader() {
+	private boolean createReportHeader() {
 		String txtStyle = "<style>div {display:none;text-align: justify;word-break: break-all;}\n";
 		String btnStyle = "button {font-size:13px;}\n";
 		String imgStyle = "img {max-width:100%; height:auto;}</style>\n";
@@ -100,7 +115,7 @@ public class ReportGenerator {
 		return true;
 	}
 	
-	private static boolean createReportMiddle(File f, String path) {
+	private boolean createReportMiddle(File f, String path) {
 		String imgPath = getImgPath(convert2png(f, imgString, path));
 		String sourceCode = StringEscapeUtils.escapeHtml4(getSource(f));
 
@@ -116,18 +131,19 @@ public class ReportGenerator {
 		return true;
 	}
 	
-	private static boolean createReportFooter(String path){
+	private boolean createReportFooter(String path){
 		htmlStringBuilder.append("</body></html>");
 		try {
-			WriteToFile(htmlStringBuilder.toString(), "report.html", path);
+			writeToFile(htmlStringBuilder.toString(), "report.html", path);
 
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		return true;
 	}
 	
-	public static void WriteToFile(String fileContent, String fileName, String path) throws IOException {
+	private void writeToFile(String fileContent, String fileName, String path) throws IOException {
 		String tempFile = path + File.separator + fileName;
 		File report = new File(tempFile);
 		
@@ -137,13 +153,14 @@ public class ReportGenerator {
 		}
 		FileUtils.writeStringToFile(report, fileContent);
 		Desktop.getDesktop().browse(report.toURI());
-		System.out.println("Report path: " + report.getPath());
+		
+		// Debug
+		// System.out.println("Report Path: " + report.getPath());
 	}
 	
-	public static File[] readFilesFromFolder(File dir) {
+	private File[] readFilesFromFolder(File dir) {
 		File[] files;
 		FilenameFilter receivedFileFilter = new FilenameFilter() {
-
 			@Override
 			public boolean accept(File dir, String name) {
 				if(name.startsWith("receivedFile_")) 
@@ -154,26 +171,7 @@ public class ReportGenerator {
 		};
 		
 		files = dir.listFiles(receivedFileFilter);
-		for(File file : files) {
-			System.out.println(file.getName());
-		}
-		
 		return files;
 	}
 	
-	public void createReport() {
-		String filePath = path + "reports/";
-		
-		File dir = new File(filePath);
-		
-		File[] files = readFilesFromFolder(dir);
-
-		createReportHeader();		
-		for(int i = 0; i < files.length; i ++) {
-			readFileToString(files[i]);
-			createReportMiddle(files[i], path);
-			globalElemID ++;
-		}
-		createReportFooter(path);
-	}
 }
