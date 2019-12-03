@@ -100,7 +100,7 @@ The custom virtual machine appliance that is setup for running the client progra
 
 #### AdjacentKeys
 
-(TBA)
+This class has 1 public method, which returns a Map, where each key is mapped to an array of keys which it is adjacent to on the keyboard. This map is used for generating character replacement typos and character insertion typos.
 
 ### Client Program
 
