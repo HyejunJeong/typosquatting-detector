@@ -77,7 +77,7 @@ The custom virtual machine appliance that is setup for running the client progra
 > **Note:** We need to provide some **high level details** about the architecture of our project. We need to answer why we chose a specific way of doing it, compared to all other possible ways. **Delete this when we are done**.
 
 (TBA: General overview. Why Java RMI? Why JSP?)
-		              < good question lmao
+		              
 
 ### Server Program
 
