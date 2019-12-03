@@ -137,11 +137,10 @@ We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 * **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
 	* Worked on (TBA)
 * **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong) - hye-jun.jeong@stonybrook.edu
-	* Worked on (TBA) 
-	* creating algorithms for generating the typo-generation models 1 and 2.
-	* crawling a typo-url and get a page source and a screenshot.
-	* transferring results from the clients to the server.
-	* generating the old and new results (report.html) to the web dashboard.
+	* Worked on (TBA)  creating algorithms for generating the typo-generation models 1 and 2.  
+	crawling a typo-url and get a page source and a screenshot.  
+	transferring results from the clients to the server.  
+	generating the old and new results (report.html) to the web dashboard.  
 * **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
 	* Worked on (TBA)
 * **Nicholas Reimer** - [nreimer](https://github.com/nreimer) - nicholas.reimer@stonybrook.edu
