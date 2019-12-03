@@ -12,26 +12,21 @@
         <input type="text" name="input" id="input" />
         <input type="submit" value="Search"/>
     </form>
-    
     <div id="test">
-    </div>
-    
+    </div>    
     <script>
     	let div = document.getElementById("test");
     	let newDiv = document.createElement("div");
     	newDiv.innerHTML = "does this work?";
     	div.appendChild(newDiv);
-    </script>
-    
+    </script>    
     <%
         if (request.getAttribute("output") != null) {
             out.println(request.getAttribute("output"));
         }
-    %>
+    %>    
     <c:if test="${report != null}">
     	<jsp:include page="${report}"/>
-    </c:if>
-    
+    </c:if>    
 </body>
 </html>
-<!--  test comment  -->

@@ -14,5 +14,6 @@
 .idea/
 
 # etc
+*.cpgz
 /sites/
 /target/
