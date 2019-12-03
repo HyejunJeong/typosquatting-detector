@@ -93,10 +93,12 @@ The custom virtual machine appliance that is setup for running the client progra
 #### Server
 
 (TBA)
+This is an interface which is implemented by ServerImpl. It delcares(proper term?) the methods that need to be implemented by the Server in order to handle client connections, assigning URLs to clients, and receiving results back from clients. 
 
 #### ServerImpl
 
 (TBA)
+This serves as the Master Node. It first receives a URL, and generates typo squatting variants of that URL, and paces them all in a queue. Then, it will assign one URL at a time to any running Worker Nodes to be crawled, and saves any results it receives back from the clients. It will then display the results on the Web Dashboard. 
 
 #### AdjacentKeys
 
@@ -109,10 +111,12 @@ This class has 1 public method, which returns a Map, where each key is mapped to
 #### Client
 
 (TBA)
+This is an interface which is implemented by ClientImpl. It declares the crawl() method, which the Client must implement in order to crawl URLs.
 
 #### ClientImpl
 
 (TBA)
+This serves as the Worker Node. It reports itself for duty to the Master Node, and waits for the Master Node to assign it a URL to crawl. Once it receives the URL, it checks if the page exists, and if it does, it crawls it using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot back to the Master Node.
 
 ### Third-Party Resources
 
