@@ -32,11 +32,10 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		System.out.println("Starting Server...");
 		
 		// Ask for local IP address to host the server
-//		Scanner scanner = new Scanner(System.in);
-//		System.out.print("\nPlease Enter Your Local IP Address to Host the Server: ");
-//		String address = scanner.nextLine();
-//		scanner.close();
-		String address = "127.0.0.1";
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("\nPlease Enter Your Local IP Address to Host the Server: ");
+		String address = scanner.nextLine();
+		scanner.close();
 		
 		try {
 			// Bind remote server object
@@ -134,12 +133,11 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public void assignWork(String iurl) throws RemoteException {
 		if (!clientMap.isEmpty()) {
 			// Generate typos and add them to queue
-//			getTyposType1(iurl);
-//			getTyposType2(iurl);
-//			getTyposType3(iurl);
-//			getTyposType4(iurl);
-//			getTyposType5(iurl);
-			urlQueue.add("www.amazon.com");
+			getTyposType1(iurl);
+			getTyposType2(iurl);
+			getTyposType3(iurl);
+			getTyposType4(iurl);
+			getTyposType5(iurl);
 
 			// TODO: Check the status of clients by pinging them before assigning work
 
@@ -150,7 +148,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 				Crawler crawler = new Crawler(c);
 				crawler.start();
 			}
-			
 			
 			while(!this.URLQueueIsEmpty()) {		//Check every 1 second if the queue is empty
 				try {
