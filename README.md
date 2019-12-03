@@ -105,6 +105,10 @@ This serves as the Master Node. It first receives a URL, and generates typo squa
 
 This class has 1 public method, which returns a Map, where each key is mapped to an array of keys which it is adjacent to on the keyboard. This map is used for generating character replacement typos and character insertion typos.
 
+#### ReportGenerator
+
+ReportGenerator class collects the reports received from the worker nodes. Each of the reports is consist of a url, a base64 encoded screenshot, and a source code. This class reads the reports from a folder, decodes the screenshots, and saves them into another folder. Then it assembles all the alive URLs, each of which corresponding screenshot and a source code, and creates a single html file (report.html).
+
 ### Client Program
 
 (TBA: An overview of the client side code.)
@@ -117,7 +121,7 @@ This is an interface which is implemented by ClientImpl. It declares the crawl()
 #### ClientImpl
 
 (TBA)
-This serves as the Worker Node. It reports itself for duty to the Master Node, and waits for the Master Node to assign it a URL to crawl. Once it receives the URL, it checks if the page exists, and if it does, it crawls it using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot back to the Master Node.
+This serves as the Worker Node. It reports itself for duty to the Master Node, and waits for the Master Node to assign it a URL to crawl. Once it receives the URL, it checks if the page exists, and if it does, it crawls it using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot back to the Master Node in .txt format.
 
 ### Third-Party Resources
 
