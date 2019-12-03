@@ -107,7 +107,7 @@ This class has 1 public method, which returns a Map, where each key is mapped to
 
 #### ReportGenerator
 
-ReportGenerator class collects the reports received from the worker nodes. Each of the reports is consist of a url, a base64 encoded screenshot, and a source code. This class reads the reports from a folder, decodes the screenshots, and saves them into another folder. Then it assembles all the alive URLs, each of which corresponding screenshot and a source code, and creates a single html file (report.html).
+ReportGenerator class collects the reports received from the worker nodes. Each of the reports is consist of a url, a base64 encoded screenshot, and a source code. This class reads the reports from a folder, decodes the screenshots, and saves them into another folder. Then it assembles all the alive URL variants, along with corresponding screenshot and a source code, and creates a single html file (report.html).
 
 ### Client Program
 
@@ -121,7 +121,9 @@ This is an interface which is implemented by ClientImpl. It declares the crawl()
 #### ClientImpl
 
 (TBA)
-This serves as the Worker Node. It reports itself for duty to the Master Node, and waits for the Master Node to assign it a URL to crawl. Once it receives the URL, it checks if the page exists, and if it does, it crawls it using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot back to the Master Node in .txt format.
+This serves as the Worker Node. It reports itself for duty to the Master Node, and waits for the Master Node to assign it a URL to crawl. Once it receives the URL, it checks if the page exists. If the typosquatting domain is alive, it crawls the url using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot (encoded in base64) back to the Master Node in .txt format.
+The Worker Node takes a screenshot in a string format so that each url corresponds to a single file containing image and page source. Concatenating the elements in a single file also facilitates the management of files in both server and client sides.
+
 
 ### Third-Party Resources
 
