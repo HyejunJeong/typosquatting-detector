@@ -25,7 +25,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	
 	private static Server server;
 	
-	private String reportPath = "/Users/HyejunJEONG/eclipse-workspace/typosquatting-detector/WebContent/";
+	private String reportPath;
 	
 	public static void init() {
 		// Print message for the users
@@ -82,7 +82,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	
 	@Override
 	public void setReportPath(String path) throws RemoteException {
-		this.reportPath = "/Users/HyejunJEONG/eclipse-workspace/typosquatting-detector/WebContent/";
+		this.reportPath = path;
 	}
 	
 	@Override

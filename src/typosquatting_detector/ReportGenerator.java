@@ -1,5 +1,6 @@
 package typosquatting_detector;
 
+import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -18,7 +19,7 @@ public class ReportGenerator {
 	private static String imgString;
 	private static String source;
 	
-	private String path ="/Users/HyejunJEONG/eclipse-workspace/typosquatting-detector/WebContent/";
+	private String path;
 	
 	File screenshot;
 
@@ -26,7 +27,6 @@ public class ReportGenerator {
 	
 	public void setPath(String path) {
 		this.path = path;
-		System.out.println("[RG] setPath: path = " + path);
 	}
 
 	private static String readFileToString(File f) {
@@ -116,7 +116,6 @@ public class ReportGenerator {
 		return true;
 	}
 	
-	
 	private static boolean createReportFooter(String path){
 		htmlStringBuilder.append("</body></html>");
 		try {
@@ -137,6 +136,7 @@ public class ReportGenerator {
 			report.renameTo(newFileName);
 		}
 		FileUtils.writeStringToFile(report, fileContent);
+		Desktop.getDesktop().browse(report.toURI());
 		System.out.println("Report path: " + report.getPath());
 	}
 	
@@ -146,13 +146,10 @@ public class ReportGenerator {
 
 			@Override
 			public boolean accept(File dir, String name) {
-				if(name.startsWith("receivedFile_")) {
-					System.out.println("true");
+				if(name.startsWith("receivedFile_")) 
 					return true;
-				}
-				else {
+				else 
 					return false;
-				}
 			}
 		};
 		
