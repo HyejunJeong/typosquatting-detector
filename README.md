@@ -82,14 +82,17 @@ The custom virtual machine appliance that is setup for running the client progra
 ### Server Program
 
 (TBA: An overview of the server side code.)
+The Server as a whole functions as the Master Node and the Web Dashboard. The Server is responsible for displaying the form and the results to the Web Dashboard, as well as taking user input and generating all typo squatting variants of a given URL. 
 
 #### Servlet
 
 (TBA)
+This is our Web Dashboard. It displays a form where a user can enter a URL. When the user presses the button, the servlet gives the URL to the Server. Once the Server is finished assigning all the URL typos to the Worker Nodes, the servlet displays the results. 
 
 #### ServletListener
 
 (TBA)
+This class waits for the servlet to be started. When the servlet is started, it starts running the server.
 
 #### Server
 
@@ -112,6 +115,7 @@ ReportGenerator class collects the reports received from the worker nodes. Each 
 ### Client Program
 
 (TBA: An overview of the client side code.)
+The Client as a whole serves as the Worker Node.
 
 #### Client
 
