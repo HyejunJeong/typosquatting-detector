@@ -18,7 +18,7 @@ public class ReportGenerator {
 	private static String imgString;
 	private static String source;
 	
-	private String path;
+	private String path ="/Users/HyejunJEONG/eclipse-workspace/typosquatting-detector/WebContent/";
 	
 	File screenshot;
 
@@ -26,10 +26,10 @@ public class ReportGenerator {
 	
 	public void setPath(String path) {
 		this.path = path;
+		System.out.println("[RG] setPath: path = " + path);
 	}
 
 	private static String readFileToString(File f) {
-		//String path = tempFile.getPath();
 		String content = "";
 		try {
 			content = FileUtils.readFileToString(f);
@@ -96,7 +96,6 @@ public class ReportGenerator {
 		htmlStringBuilder.append("<html>\n<head><title>Typosquatting Detector</title></head>\n");
 		htmlStringBuilder.append(txtStyle + btnStyle + imgStyle);
 		htmlStringBuilder.append("<h2 style=\"text-align: center;\">Server Report</h2><body>");
-		System.out.println("[Report Generator] createReportHeader");
 
 		return true;
 	}
@@ -113,7 +112,6 @@ public class ReportGenerator {
 		htmlStringBuilder.append("<img src="+ imgPath +"><br><br>\n");
 		htmlStringBuilder.append("<button onclick=\"myFunction"+globalElemID+"()\">View Source Code</button>\n");
 		htmlStringBuilder.append("<div id=\"myDIV"+globalElemID+"\">"+ sourceCode +"</div>\n");
-		System.out.println("[Report Generator] createReportMiddle");
 	
 		return true;
 	}
@@ -123,7 +121,6 @@ public class ReportGenerator {
 		htmlStringBuilder.append("</body></html>");
 		try {
 			WriteToFile(htmlStringBuilder.toString(), "report.html", path);
-			System.out.println("[Report Generator] createReportFooter");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -149,10 +146,13 @@ public class ReportGenerator {
 
 			@Override
 			public boolean accept(File dir, String name) {
-				if(name.startsWith("receivedFile_"))
+				if(name.startsWith("receivedFile_")) {
+					System.out.println("true");
 					return true;
-				else
+				}
+				else {
 					return false;
+				}
 			}
 		};
 		
@@ -168,7 +168,6 @@ public class ReportGenerator {
 		String filePath = path + "reports/";
 		
 		File dir = new File(filePath);
-		
 		
 		File[] files = readFilesFromFolder(dir);
 

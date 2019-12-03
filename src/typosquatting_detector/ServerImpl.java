@@ -25,17 +25,18 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	
 	private static Server server;
 	
-	private String reportPath;
+	private String reportPath = "/Users/HyejunJEONG/eclipse-workspace/typosquatting-detector/WebContent/";
 	
 	public static void init() {
 		// Print message for the users
 		System.out.println("Starting Server...");
 		
 		// Ask for local IP address to host the server
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("\nPlease Enter Your Local IP Address to Host the Server: ");
-		String address = scanner.nextLine();
-		scanner.close();
+//		Scanner scanner = new Scanner(System.in);
+//		System.out.print("\nPlease Enter Your Local IP Address to Host the Server: ");
+//		String address = scanner.nextLine();
+//		scanner.close();
+		String address = "127.0.0.1";
 		
 		try {
 			// Bind remote server object
@@ -81,7 +82,7 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	
 	@Override
 	public void setReportPath(String path) throws RemoteException {
-		this.reportPath = path;
+		this.reportPath = "/Users/HyejunJEONG/eclipse-workspace/typosquatting-detector/WebContent/";
 	}
 	
 	@Override
@@ -133,11 +134,12 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 	public void assignWork(String iurl) throws RemoteException {
 		if (!clientMap.isEmpty()) {
 			// Generate typos and add them to queue
-			getTyposType1(iurl);
-			getTyposType2(iurl);
-			getTyposType3(iurl);
-			getTyposType4(iurl);
-			getTyposType5(iurl);
+//			getTyposType1(iurl);
+//			getTyposType2(iurl);
+//			getTyposType3(iurl);
+//			getTyposType4(iurl);
+//			getTyposType5(iurl);
+			urlQueue.add("www.amazon.com");
 
 			// TODO: Check the status of clients by pinging them before assigning work
 
@@ -177,7 +179,6 @@ public class ServerImpl extends UnicastRemoteObject implements Server {
 		if(!dir.exists()) {
 			dir.mkdir();
 		}
-
 
 		try {
 			File tempFile = File.createTempFile("receivedFile_", ".txt", dir);

@@ -55,14 +55,19 @@ public class ClientImpl extends UnicastRemoteObject implements Client {
 		System.out.println("Starting Client...");
 		
 		// Ask for IP addresses and local chrome driver path
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("\nPlease Enter Your Local IP Address: ");
-		String caddr = scanner.nextLine();
-		System.out.print("Please Enter the Hosted Server's Local IP Address: ");
-		String saddr = scanner.nextLine();
-		System.out.print("Please Enter the Path to Chrome Driver: ");
-		chromeDriverPath = scanner.nextLine();
-		scanner.close();
+//		Scanner scanner = new Scanner(System.in);
+//		System.out.print("\nPlease Enter Your Local IP Address: ");
+//		String caddr = scanner.nextLine();
+//		System.out.print("Please Enter the Hosted Server's Local IP Address: ");
+//		String saddr = scanner.nextLine();
+//		System.out.print("Please Enter the Path to Chrome Driver: ");
+//		chromeDriverPath = scanner.nextLine();
+//		scanner.close();
+		
+		String caddr = "127.0.0.1";
+		String saddr = "127.0.0.1";
+		chromeDriverPath = "/usr/local/bin/chromedriver";
+
 		
 		try {
 			// Get remote server object
