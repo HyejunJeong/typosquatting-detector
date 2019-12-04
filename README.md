@@ -129,11 +129,10 @@ We used Apache Tomcat to run our Server. We also used ChromeDriver so our Worker
 We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 
 * **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
-    * wrote algorithm for generating typos using the typo-generation model #4 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
-    * created algorithm for generating type 4 typos
-    * created architecture for managing worker nodes
-    * contributed to design of RMI architecture
-    * added report to web dashboard 
+    * Wrote algorithm for generating typos using the typo-generation model #4 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+    * Created architecture for managing worker nodes
+    * Contributed to design of RMI architecture
+    * Added report to web dashboard 
 * **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong) - hye-jun.jeong@stonybrook.edu
 	* Wrote algorithms for generating typos using the typo-generation models #1 and  #2 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
 	* Crawled typo URLs and get a page source and a screenshot.  
