@@ -1,17 +1,17 @@
 # Distributed Typosquatting Detector
 
-Distributed Typosquatting Detector is (add brief introduction here)
+Distributed Typosquatting Detector is the distributed application with the simple web interface that receives a user input, scans domain squatting URLs in multiple remote machines and dynamically returns back a scan result.
 
 ## Getting Started
 
-This project is divided into the server and client program. The instructions below are for Linux/Unix environments.
+This project is divided into the server and client program.
 
 ### Running the Server
 
 #### Requirements
 
+* Java Development Kit 11 or higher
 * Apache Tomcat 9.0 or higher
-* JDK 11 or higher
 
 #### Instructions
 
@@ -22,10 +22,10 @@ This project is divided into the server and client program. The instructions bel
     ```
 
 2. Copy and paste typosquatting-detector.war from the project directory to the webapps directory under your Tomcat home directory.
-    > You may need to use ``sudo`` to access the Tomcat subdirectories.
+    > **Note:** You may need to use ``sudo`` to access the Tomcat subdirectories.
 
 3. In the Tomcat directory, run ``bin/catalina.sh run`` to start the server. Enter the IP address to bind the server to.
-    > It is recommended that you start Tomcat from the command line and not as a service because the server requires input from the console to start up.
+    > **Note:** It is recommended that you start Tomcat from the command line and not as a service because the server requires input from the console to start up.
 
 4. Go to [``localhost:8080/typosquatting-detector/search``](http://localhost:8080/typosquatting-detector/search) in a web browser. You should see the dashboard.
 
@@ -44,7 +44,11 @@ This project is divided into the server and client program. The instructions bel
 * [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches the version of your Chrome
 * Xvfb (only for Linux environments)
 
-#### Instructions
+#### Instructions for Running the Executable JAR
+
+(TBA by Jay)
+
+#### Instructions for Compiling and Running Source Codes
 
 1. Clone this repository to the location where you wish to run the client program. Since this is a private repository at the moment, you will have to use the special command as follows.
     ```shell
@@ -70,86 +74,79 @@ This project is divided into the server and client program. The instructions bel
 
 #### Virtual Machine for Running the Client
 
-The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK 11, Chrome, Chrome Web Driver for Selenium and Xvfb. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. The password is ``1234``. It is recommended to import and run this appliance in VirtualBox.
+The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK 11, Chrome, Chrome Web Driver for Selenium and Xvfb. The password is ``1234``. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. It is recommended to import and run this appliance in VirtualBox.
 
 ## Program Architecture and Description
 
-> **Note:** We need to provide some **high level details** about the architecture of our project. We need to answer why we chose a specific way of doing it, compared to all other possible ways. **Delete this when we are done**.
-
-(TBA: General overview. Why Java RMI? Why JSP?)
-		              
+Our program uses Java Remote Method Invocation(RMI) to communicate between the Master Node and the Worker Nodes. We used RMI becuase it is useful in creating distributed systems in Java. Our program also used servlets and Java Server Pages(JSP) for the Web Dashboard. We decided to use servlets and JSP so we could do the entire project in 1 language(Java).
 
 ### Server Program
 
-(TBA: An overview of the server side code.)
-The Server as a whole functions as the Master Node and the Web Dashboard. The Server is responsible for displaying the form and the results to the Web Dashboard, as well as taking user input and generating all typo squatting variants of a given URL. 
+The server as a whole functions as the web dashboard and the "Master Node". It is responsible for displaying the form and the results to the web dashboard, as well as taking user input and generating all typo squatting variants of a given URL by using the remote clients.
 
 #### Servlet
 
-(TBA)
-This is our Web Dashboard. It displays a form where a user can enter a URL. When the user presses the button, the servlet gives the URL to the Server. Once the Server is finished assigning all the URL typos to the Worker Nodes, the servlet displays the results. 
+This is a part of the web dashboard. Initially, ``index.jsp`` contains a form where a user can enter a URL. When the submits a request, ``Servlet`` transfers a user input to ``ServerImpl`` and then make it to assign work to the clients. Once the clients are done scanning URLs and the server is done assembling the results received from the clients, the servlet displays the results back to the web dashboard. 
 
 #### ServletListener
 
-(TBA)
-This class waits for the servlet to be started. When the servlet is started, it starts running the server.
+This contains the ``contextInitialized`` method that is called when the server side program is first started. It initializes ``ClientImpl`` and ``RemoteGenerator``.
 
 #### Server
 
-(TBA)
-This is an interface which is implemented by ServerImpl. It delcares(proper term?) the methods that need to be implemented by the Server in order to handle client connections, assigning URLs to clients, and receiving results back from clients. 
+This is an interface which is implemented by ``ServerImpl``. This interface is required for remotely invocating server side methods from the clients. It declares the methods that need to be implemented by the server in order to handle client connections, assigning URLs to clients, and receiving results back from clients.
 
 #### ServerImpl
 
-(TBA)
-This serves as the Master Node. It first receives a URL, and generates typo squatting variants of that URL, and paces them all in a queue. Then, it will assign one URL at a time to any running Worker Nodes to be crawled, and saves any results it receives back from the clients. It will then display the results on the Web Dashboard. 
+This is the implementation of the server side program. It first receives a URL, generates typo squatting variants of that URL and then places them all in a ``urlQueue``. Then, it assigns one URL at a time to any running clients to be crawled and saves any results it receives back from the clients. It will then display the results on the Web Dashboard. 
 
 #### AdjacentKeys
 
-This class has 1 public method, which returns a Map, where each key is mapped to an array of keys which it is adjacent to on the keyboard. This map is used for generating character replacement typos and character insertion typos.
+This has one public method, which returns the ``map``, where each key is mapped to an array of keys which it is adjacent to on the keyboard. This ``map`` is used for generating character replacement typos and character insertion typos.
 
 #### ReportGenerator
 
-ReportGenerator class collects the reports received from the worker nodes. Each of the reports is consist of a url, a base64 encoded screenshot, and a source code. This class reads the reports from a folder, decodes the screenshots, and saves them into another folder. Then it assembles all the alive URL variants, along with corresponding screenshot and a source code, and creates a single html file (report.html).
+This collects the reports received from the clients. Each of the reports consists a URL, base64 encoded screenshot and source code. This reads the reports from a folder, decodes the screenshots and saves them into another folder. It then assembles all the alive URL variants, along with corresponding screenshot and a source code, and creates a single HTML file, which is ``report.html``.
 
 ### Client Program
 
-(TBA: An overview of the client side code.)
-The Client as a whole serves as the Worker Node.
+The client as a whole serves as the "Worker Node". When run, it connects to the server, reports itself by registering to the server and then waits to be assigned a URL to crawl. Once it receives a URL from the server, it uses headless chrome to check if that URL exists, and if it does, take a screenshot and collect the HTML script, then report all of this back to the server. 
 
 #### Client
 
-(TBA)
-This is an interface which is implemented by ClientImpl. It declares the crawl() method, which the Client must implement in order to crawl URLs.
+This is an interface which is implemented by ``ClientImpl``. This interface is required for remotely invocating client side methods from the server. It declares the ``crawl`` method, which the ``Client`` must implement in order to crawl URLs.
 
 #### ClientImpl
 
-(TBA)
-This serves as the Worker Node. It reports itself for duty to the Master Node, and waits for the Master Node to assign it a URL to crawl. Once it receives the URL, it checks if the page exists. If the typosquatting domain is alive, it crawls the url using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot (encoded in base64) back to the Master Node in .txt format.
-The Worker Node takes a screenshot in a string format so that each url corresponds to a single file containing image and page source. Concatenating the elements in a single file also facilitates the management of files in both server and client sides.
-
+This is the implementation of the client side program that reports itself for duty to the server by generating its unique ID and then registering itself to the ``clientMap`` of the server. It then waits for the server to begin crawling URLs from the server's ``urlQueue``. Once it receives the URL, it checks if the page exists. If the typosquatting domain is alive, it crawls the URL using headless chrome, collects the HTML script, and takes a screenshot of the page. Finally, it will report the HTML script and screenshot (encoded in base64) back to the Master Node in .txt format, which corresponds to a single file containing image and page source. Concatenating the elements in a single file is also aimed to facilitate the management of files in both server and client sides.
 
 ### Third-Party Resources
 
-(TBA)
-
+We used Apache Tomcat to run our Server. We also used ChromeDriver so our Worker Nodes could crawl the typo squatting domains. For communicating between the Master and Worker nodes, we used Java RMI.
 
 ## Authors
 
 We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 
 * **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
+    * wrote algorithm for generating typos using the typo-generation model #4 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
     * created algorithm for generating type 4 typos
     * created architecture for managing worker nodes
     * contributed to design of RMI architecture
     * added report to web dashboard 
 * **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong) - hye-jun.jeong@stonybrook.edu
-	* Worked on (TBA)  
-	++ creating algorithms for generating the typo-generation models 1 and 2.  
-	++ crawling a typo-url and get a page source and a screenshot.  
-	++ transferring results from the clients to the server.  
-	++ generating the old and new results (report.html) to the web dashboard.  
-* **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
-	* Worked on (TBA)
+	* Wrote algorithms for generating typos using the typo-generation models #1 and  #2 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+	* Crawled typo URLs and get a page source and a screenshot.  
+	* Transferred resulting images and HTML scripts from the clients to the server.  
+	* Generated old and new results as ``report.html`` to the web dashboard.  
+* **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - myungsuk.moon@stonybrook.edu
+	* Wrote algorithm for generating typos using the typo-generation model #3 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+	* Made the web interface by using the JavaServer Pages (JSP). Received the user input and then dynamically returned the result.
+	* Made the distributed system by using Java Remote Method Invocation (Java RMI). Registered and deregistered clients using their uniquely generated IDs on the server. Made the queue of URLs on the server to be remotely accessed by multiple clients.
+	* Set up the VirtualBox appliance for running the clients.
 * **Nicholas Reimer** - [nreimer](https://github.com/nreimer) - nicholas.reimer@stonybrook.edu
-	* Worked on (TBA)
+	* Wrote algorithm for generating typos using the typo-generation model #5 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+	* Created a way for the server to assign URLs to all running clients concurrently. 
+	* Worked on creating a connection between server and client(Master Node and Worker Node) with Java RMI.
+	* Created the AdjacencyKeys.java file, which generates the map of adjacent keys.
+	* Although this did not make it into the final version of our project, connected the server to MongoDB to save results from the Worker Nodes(Instead results from Worker Nodes were saved in files by the server).
