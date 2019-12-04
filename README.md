@@ -78,11 +78,7 @@ The custom virtual machine appliance that is setup for running the client progra
 
 ## Program Architecture and Description
 
-(TBA: General overview. Why Java RMI? Why JSP?)
-Used rmi so it is distributed.
-JSP so we could write it all in java?
-
-//Add more detail for these ^^
+Our program uses Java Remote Method Invocation(RMI) to communicate between the Master Node and the Worker Nodes. We used RMI becuase it is useful in creating distributed systems in Java. Our program also used servlets and Java Server Pages(JSP) for the Web Dashboard. We decided to use servlets and JSP so we could do the entire project in 1 language(Java).
 
 ### Server Program
 
@@ -126,7 +122,6 @@ This is the implementation of the client side program that reports itself for du
 
 ### Third-Party Resources
 
-(TBA)
 We used Apache Tomcat to run our Server. We also used ChromeDriver so our Worker Nodes could crawl the typo squatting domains. For communicating between the Master and Worker nodes, we used Java RMI.
 
 ## Authors
