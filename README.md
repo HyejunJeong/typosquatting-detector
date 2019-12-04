@@ -1,6 +1,6 @@
 # Distributed Typosquatting Detector
 
-Distributed Typosquatting Detector is the distributed application with the simple web interface that receives a user input, scans domain squatting URLs in multiple remote machines and dynamically returns a scan result.
+Distributed Typosquatting Detector is the distributed application with the simple web interface that receives a user input, scans domain squatting URLs in multiple remote machines and dynamically returns back a scan result.
 
 ## Getting Started
 
@@ -89,27 +89,26 @@ JSP so we could write it all in java?
 
 ### Server Program
 
-(TBA: An overview of the server side code.)
+(TBA: being edited by Jay right now)
 The Server as a whole functions as the Master Node and the Web Dashboard. The Server is responsible for displaying the form and the results to the Web Dashboard, as well as taking user input and generating all typo squatting variants of a given URL. 
 
 #### Servlet
 
-(TBA)
+(TBA: being edited by Jay right now)
 This is our Web Dashboard. It displays our index.jsp file. Initiall, index.jsp contains a form where a user can enter a URL. When the user presses the button, the servlet gives the URL to the Server. Once the Server is finished assigning all the URL typos to the Worker Nodes, the servlet displays the results. 
 
 #### ServletListener
 
-(TBA)
+(TBA: being edited by Jay right now)
 This class waits for the servlet to be started. When the servlet is started, it starts running the server.
 
 #### Server
 
-(TBA)
-This is an interface which is implemented by ServerImpl. It delcares(proper term?) the methods that need to be implemented by the Server in order to handle client connections, assigning URLs to clients, and receiving results back from clients. 
+This is an interface which is implemented by ServerImpl. This interface is required for remotely invocating server side methods from the clients. It declares the methods that need to be implemented by the Server in order to handle client connections, assigning URLs to clients, and receiving results back from clients.
 
 #### ServerImpl
 
-(TBA)
+(TBA: being edited by Jay right now)
 This serves as the Master Node. It first receives a URL, and generates typo squatting variants of that URL, and paces them all in a queue. Then, it will assign one URL at a time to any running Worker Nodes to be crawled, and saves any results it receives back from the clients. It will then display the results on the Web Dashboard. 
 
 #### AdjacentKeys
@@ -122,20 +121,16 @@ ReportGenerator class collects the reports received from the worker nodes. Each 
 
 ### Client Program
 
-(TBA: An overview of the client side code.)
+(TBA: being edited by Jay right now)
 The Client as a whole serves as the Worker Node. When run, it connects to the server, and reports itself to the Master Node, then waits to be assigned a URL to crawl. Once it receives a URL from the Master Node, it uses headless chrome to check if that URL exists, and if it does, take a screenshot and collect the html code, then report all of this back to the Master Node. 
 
 #### Client
 
-(TBA)
-This is an interface which is implemented by ClientImpl. It declares the crawl() method, which the Client must implement in order to crawl URLs.
+This is an interface which is implemented by ClientImpl. This interface is required for remotely invocating client side methods from the server. It declares the crawl() method, which the Client must implement in order to crawl URLs.
 
 #### ClientImpl
 
-(TBA)
-This serves as the Worker Node. It reports itself for duty to the Master Node, and waits for the Master Node to assign it a URL to crawl. Once it receives the URL, it checks if the page exists. If the typosquatting domain is alive, it crawls the url using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot (encoded in base64) back to the Master Node in .txt format.
-The Worker Node takes a screenshot in a string format so that each url corresponds to a single file containing image and page source. Concatenating the elements in a single file also facilitates the management of files in both server and client sides.
-
+This is the implementation of the client side program, or the "Worker Node," that reports itself for duty to the server by generating its unique ID and then registering itself to the clientMap of the server. It then waits for the server to begin crawling URLs from the server's urlQueue. Once it receives the URL, it checks if the page exists. If the typosquatting domain is alive, it crawls the URL using headless chrome, collects the html code, and takes a screenshot of the page. Finally, it will report the html code and screenshot (encoded in base64) back to the Master Node in .txt format, which corresponds to a single file containing image and page source. Concatenating the elements in a single file also facilitates the management of files in both server and client sides.
 
 ### Third-Party Resources
 
