@@ -139,7 +139,10 @@ The Worker Node takes a screenshot in a string format so that each url correspon
 We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 
 * **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
-	* Worked on (TBA)
+    * created algorithm for generating type 4 typos
+    * created architecture for managing worker nodes
+    * contributed to design of RMI architecture
+    * added report to web dashboard 
 * **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong) - hye-jun.jeong@stonybrook.edu
 	* Worked on (TBA)  
 	++ creating algorithms for generating the typo-generation models 1 and 2.  
