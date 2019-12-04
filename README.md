@@ -133,9 +133,7 @@ This is the implementation of the client side program, or the "Worker Node," tha
 ### Third-Party Resources
 
 (TBA)
-Tomcat?
-rmi?
-headless chrome?
+We used Apache Tomcat to run our Server. We also used ChromeDriver so our Worker Nodes could crawl the typo squatting domains. For communicating between the Master and Worker nodes, we used Java RMI.
 
 ## Authors
 
