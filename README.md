@@ -148,4 +148,7 @@ We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 	* Set up the VirtualBox appliance for running the clients.
 * **Nicholas Reimer** - [nreimer](https://github.com/nreimer) - nicholas.reimer@stonybrook.edu
 	* Wrote algorithm for generating typos using the typo-generation model #5 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
-	* (TBA)
+	* Created a way for the server to assign URLs to all running clients concurrently. 
+	* Worked on creating a connection between server and client(Master Node and Worker Node) with Java RMI.
+	* Created the AdjacencyKeys.java file, which generates the map of adjacent keys.
+	* Although this did not make it into the final version of our project, connected the server to MongoDB to save results from the Worker Nodes(Instead results from Worker Nodes were saved in files by the server).
