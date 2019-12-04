@@ -1,17 +1,17 @@
 # Distributed Typosquatting Detector
 
-Distributed Typosquatting Detector is (add brief introduction here)
+Distributed Typosquatting Detector is the distributed application that scans domain squatting URLs in multiple remote machines. It has the simple web interface that receives a user input and then dynamically returns a scan result.
 
 ## Getting Started
 
-This project is divided into the server and client program. The instructions below are for Linux/Unix environments.
+This project is divided into the server and client program.
 
 ### Running the Server
 
 #### Requirements
 
+* Java Development Kit 11 or higher
 * Apache Tomcat 9.0 or higher
-* JDK 11 or higher
 
 #### Instructions
 
@@ -22,10 +22,10 @@ This project is divided into the server and client program. The instructions bel
     ```
 
 2. Copy and paste typosquatting-detector.war from the project directory to the webapps directory under your Tomcat home directory.
-    > You may need to use ``sudo`` to access the Tomcat subdirectories.
+    > **Note:** You may need to use ``sudo`` to access the Tomcat subdirectories.
 
 3. In the Tomcat directory, run ``bin/catalina.sh run`` to start the server. Enter the IP address to bind the server to.
-    > It is recommended that you start Tomcat from the command line and not as a service because the server requires input from the console to start up.
+    > **Note:** It is recommended that you start Tomcat from the command line and not as a service because the server requires input from the console to start up.
 
 4. Go to [``localhost:8080/typosquatting-detector/search``](http://localhost:8080/typosquatting-detector/search) in a web browser. You should see the dashboard.
 
@@ -147,14 +147,18 @@ headless chrome?
 We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
 
 * **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
-	* Worked on (TBA)
+	* Wrote algorithm for generating typos using the typo-generation model #4 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+	* (TBA)
 * **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong) - hye-jun.jeong@stonybrook.edu
-	* Worked on (TBA)  
-	++ creating algorithms for generating the typo-generation models 1 and 2.  
-	++ crawling a typo-url and get a page source and a screenshot.  
-	++ transferring results from the clients to the server.  
-	++ generating the old and new results (report.html) to the web dashboard.  
-* **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
-	* Worked on (TBA)
+	* Wrote algorithms for generating typos using the typo-generation models #1 and  #2 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+	* Crawled typo URLs and get a page source and a screenshot.  
+	* Transferred resulting images and HTML scripts from the clients to the server.  
+	* Generated old and new results (report.html) to the web dashboard.  
+* **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - myungsuk.moon@stonybrook.edu
+	* Wrote algorithm for generating typos using the typo-generation model #3 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+	* Made the web interface by using the JavaServer Pages (JSP). Received the user input and then dynamically returned the result.
+	* Made the distributed system by using Java Remote Method Invocation (Java RMI). Registered and deregistered clients using their uniquely generated IDs on the server. Made the queue of URLs on the server to be remotely accessed by multiple clients.
+	* Set up the VirtualBox appliance for running the clients.
 * **Nicholas Reimer** - [nreimer](https://github.com/nreimer) - nicholas.reimer@stonybrook.edu
-	* Worked on (TBA)
+	* Wrote algorithm for generating typos using the typo-generation model #5 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+	* (TBA)
