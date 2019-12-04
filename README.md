@@ -1,5 +1,7 @@
 # Distributed Typosquatting Detector
 
+``https://github.com/msukmoon/typosquatting-detector.git``
+
 Distributed Typosquatting Detector is the distributed application with the simple web interface that receives a user input, scans domain squatting URLs in multiple remote machines and dynamically returns back a scan result.
 
 ## Getting Started
