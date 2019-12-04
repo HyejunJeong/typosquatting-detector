@@ -39,14 +39,17 @@ This project is divided into the server and client program.
 
 #### Requirements
 
-* Java Development Kit 11 or higher
+* Java Development Kit 11 (13 for executable jar) or higher
 * Google Chrome
 * [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches the version of your Chrome
 * Xvfb (only for Linux environments)
 
 #### Instructions for Running the Executable JAR
 
-(TBA by Jay)
+You could simply run the executable jar for the client side program. Note that you will need Java 13 or higher to run this.
+```shell
+java -jar typosquatting-detector-client.jar
+```
 
 #### Instructions for Compiling and Running Source Codes
 
@@ -74,7 +77,7 @@ This project is divided into the server and client program.
 
 #### Virtual Machine for Running the Client
 
-The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK 11, Chrome, Chrome Web Driver for Selenium and Xvfb. The password is ``1234``. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. It is recommended to import and run this appliance in VirtualBox.
+The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK 11, Chrome, Chrome Web Driver for Selenium and Xvfb. The password is ``1234``. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. It is recommended to import and run this appliance in VirtualBox. You may also choose to run the client side program on AmazonVM or Docker.
 
 ## Program Architecture and Description
 
