@@ -12,10 +12,5 @@
         <input type="text" name="input" id="input" />
         <input type="submit" value="Search"/>
     </form>
-    <c:if test="${report != null}">
-    	<form action="report.html" target="_blank">
-		    <input type="submit" value="View Report"/>
-		</form>
-    </c:if>    
 </body>
 </html>
