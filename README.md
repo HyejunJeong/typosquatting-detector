@@ -78,13 +78,11 @@ The custom virtual machine appliance that is setup for running the client progra
 
 ## Program Architecture and Description
 
+Our program uses Java Remote Method Invocation(RMI) to communicate between the Worker Nodes and Master Node. We chose to use RMI because it is useful for creating a distributed system with Java. When the Worker Nodes find typo squatting domains, they use RMI to send the results back to the Master Node. For the Web Dashboad, our program Servlets and Java Server Pages(JSP). We chose to use JSP so we could do the whole project in one language(Java).
+
 > **Note:** We need to provide some **high level details** about the architecture of our project. We need to answer why we chose a specific way of doing it, compared to all other possible ways. **Delete this when we are done**.
 
 (TBA: General overview. Why Java RMI? Why JSP?)
-Used rmi so it is distributed.
-JSP so we could write it all in java?
-
-//Add more detail for these ^^
 		              
 
 ### Server Program
