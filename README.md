@@ -118,7 +118,7 @@ This is an interface which is implemented by ``ClientImpl``. This interface is r
 
 #### ClientImpl
 
-This is the implementation of the client side program that reports itself for duty to the server by generating its unique ID and then registering itself to the ``clientMap`` of the server. It then waits for the server to begin crawling URLs from the server's ``urlQueue``. Once it receives the URL, it checks if the page exists. If the typosquatting domain is alive, it crawls the URL using headless chrome, collects the HTML script, and takes a screenshot of the page. Finally, it will report the HTML script and screenshot (encoded in base64) back to the Master Node in .txt format, which corresponds to a single file containing image and page source. Concatenating the elements in a single file also facilitates the management of files in both server and client sides.
+This is the implementation of the client side program that reports itself for duty to the server by generating its unique ID and then registering itself to the ``clientMap`` of the server. It then waits for the server to begin crawling URLs from the server's ``urlQueue``. Once it receives the URL, it checks if the page exists. If the typosquatting domain is alive, it crawls the URL using headless chrome, collects the HTML script, and takes a screenshot of the page. Finally, it will report the HTML script and screenshot (encoded in base64) back to the Master Node in .txt format, which corresponds to a single file containing image and page source. Concatenating the elements in a single file is also aimed to facilitate the management of files in both server and client sides.
 
 ### Third-Party Resources
 
