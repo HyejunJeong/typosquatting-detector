@@ -1,6 +1,6 @@
 # Distributed Typosquatting Detector
 
-Distributed Typosquatting Detector is the distributed application that scans domain squatting URLs in multiple remote machines. It has the simple web interface that receives a user input and then dynamically returns a scan result.
+Distributed Typosquatting Detector is the distributed application with the simple web interface that receives a user input, scans domain squatting URLs in multiple remote machines and dynamically returns a scan result.
 
 ## Getting Started
 
@@ -44,7 +44,11 @@ This project is divided into the server and client program.
 * [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches the version of your Chrome
 * Xvfb (only for Linux environments)
 
-#### Instructions
+#### Instructions for Running the Executable JAR
+
+(TBA by Jay)
+
+#### Instructions for Compiling and Running Source Codes
 
 1. Clone this repository to the location where you wish to run the client program. Since this is a private repository at the moment, you will have to use the special command as follows.
     ```shell
@@ -70,7 +74,7 @@ This project is divided into the server and client program.
 
 #### Virtual Machine for Running the Client
 
-The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK 11, Chrome, Chrome Web Driver for Selenium and Xvfb. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. The password is ``1234``. It is recommended to import and run this appliance in VirtualBox.
+The custom virtual machine appliance that is setup for running the client program is available at **[here](https://drive.google.com/file/d/1c9HYGMQfblpX-hK-a4s_RQNDVVug69aK/view?usp=sharing)**. It is Ubuntu 18.04.3 LTS that includes OpenJDK 11, Chrome, Chrome Web Driver for Selenium and Xvfb. The password is ``1234``. The network adapter for the virtual machine should be attached to ``Bridged Adapter`` but  ``NAT`` or ``Host-Only Adapter``. It is recommended to import and run this appliance in VirtualBox.
 
 ## Program Architecture and Description
 
@@ -139,8 +143,6 @@ The Worker Node takes a screenshot in a string format so that each url correspon
 Tomcat?
 rmi?
 headless chrome?
-
-
 
 ## Authors
 
