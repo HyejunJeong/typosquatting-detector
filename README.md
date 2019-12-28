@@ -5,7 +5,7 @@
 Distributed Typosquatting Detector is the distributed application with the simple web interface that receives a user input, scans domain squatting URLs in multiple remote machines and dynamically returns back a scan result.
 
 <p align="center">
-  <img src="doc/td_overview_image.png" title="Overview" style="background-color: rgb(144, 202, 249);">
+  <img src="doc/td_overview_image.png" title="Overview">
 </p>
 
 ## Getting Started
