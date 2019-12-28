@@ -2,6 +2,10 @@
 
 Distributed Typosquatting Detector is the distributed application with the simple web interface that receives a user input, scans domain squatting URLs in multiple remote machines and dynamically returns back a scan result.
 
+<p align="center">
+  <img src="doc/td_overview_image.png" title="Overview">
+</p>
+
 ## Getting Started
 
 This project is divided into the server and client program.
@@ -15,13 +19,12 @@ This project is divided into the server and client program.
 
 #### Instructions
 
-1. Clone this repository to the location where you wish to run the server program. Since this is a private repository at the moment, you will have to use the special command as follows.
-
+1. Clone this repository to the location where you wish to run the server program.
     ```shell
-    git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
+    git clone https://github.com/msukmoon/typosquatting-detector
     ```
 
-2. Copy and paste typosquatting-detector.war from the project directory to the webapps directory under your Tomcat home directory.
+2. Copy and paste ``app/server/your-env/typosquatting-detector.war`` from the project directory to the webapps directory under your Tomcat home directory.
     > **Note:** You may need to use ``sudo`` to access the Tomcat subdirectories.
 
 3. In the Tomcat directory, run ``bin/catalina.sh run`` to start the server. Enter the IP address to bind the server to.
@@ -31,7 +34,7 @@ This project is divided into the server and client program.
 
 5. Enter a URL to search for typo domains and click Search or press enter.
 
-6. To shut down the server, press Ctrl-C in the terminal where you started Tomcat.
+6. To shut down the server, press ``Ctrl-C`` in the terminal where you started Tomcat.
 
 ### Running the Clients
 
@@ -39,23 +42,24 @@ This project is divided into the server and client program.
 
 #### Requirements
 
-* Java Development Kit 11 (13 for executable jar) or higher
+* Java Development Kit 11 or higher
 * Google Chrome
 * [ChromeDriver](https://chromedriver.chromium.org/downloads) that matches the version of your Chrome
+* Java Runtime Environment 13 or higher (only for running the clients executable jar)
 * Xvfb (only for Linux environments)
 
 #### Instructions for Running the Executable JAR
 
-You could simply run the executable jar for the client side program. Note that you will need Java 13 or higher to run this.
+You could simply run the executable jar for the client side program. Note that you will need JRE 13 or higher to run this.
 ```shell
 java -jar typosquatting-detector-client.jar
 ```
 
 #### Instructions for Compiling and Running Source Codes
 
-1. Clone this repository to the location where you wish to run the client program. Since this is a private repository at the moment, you will have to use the special command as follows.
+1. Clone this repository to the location where you wish to run the clients program.
     ```shell
-    git clone https://your_user_name_here@github.com/msukmoon/typosquatting-detector
+    git clone https://github.com/msukmoon/typosquatting-detector
     ```
 
 2. Go into the cloned directory.
@@ -81,7 +85,7 @@ The custom virtual machine appliance that is setup for running the client progra
 
 ## Program Architecture and Description
 
-Our program uses Java Remote Method Invocation(RMI) to communicate between the Master Node and the Worker Nodes. We used RMI becuase it is useful in creating distributed systems in Java. Our program also used servlets and Java Server Pages(JSP) for the Web Dashboard. We decided to use servlets and JSP so we could do the entire project in 1 language(Java).
+Our program uses Java Remote Method Invocation (Java RMI) to communicate between the "Master Node" and the "Worker Nodes". We used Java RMI because it is useful in creating distributed systems in Java. Our program also used servlets and Java Server Pages (JSP) for the Web Dashboard. We decided to use servlets and JSP so we could do the entire project in one language (Java).
 
 ### Server Program
 
@@ -125,30 +129,28 @@ This is the implementation of the client side program that reports itself for du
 
 ### Third-Party Resources
 
-We used Apache Tomcat to run our Server. We also used ChromeDriver so our Worker Nodes could crawl the typo squatting domains. For communicating between the Master and Worker nodes, we used Java RMI.
+We used Apache Tomcat to run our server. We also used ChromeDriver so our "Worker Nodes" could crawl the typo squatting domains. For communicating between the Master and Worker Nodes, we used Java RMI.
 
 ## Authors
 
-We are team 'Unnamed' at Stony Brook University's Fall 2019 CSE 331 class.
-
-* **Henry Crain** - [henrycrain](https://github.com/henrycrain) - henry.crain@stonybrook.edu
+* **Henry Crain** - [henrycrain](https://github.com/henrycrain)
     * Wrote algorithm for generating typos using the typo-generation model #4 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
     * Created architecture for managing worker nodes
     * Contributed to design of RMI architecture
     * Added report to web dashboard 
-* **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong) - hye-jun.jeong@stonybrook.edu
-	* Wrote algorithms for generating typos using the typo-generation models #1 and  #2 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
-	* Crawled typo URLs and get a page source and a screenshot.  
-	* Transferred resulting images and HTML scripts from the clients to the server.  
-	* Generated old and new results as ``report.html`` to the web dashboard.  
-* **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - myungsuk.moon@stonybrook.edu
-	* Wrote algorithm for generating typos using the typo-generation model #3 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
-	* Made the web interface by using the JavaServer Pages (JSP). Received the user input and then dynamically returned the result.
-	* Made the distributed system by using Java Remote Method Invocation (Java RMI). Registered and deregistered clients using their uniquely generated IDs on the server. Made the queue of URLs on the server to be remotely accessed by multiple clients.
-	* Set up the VirtualBox appliance for running the clients.
-* **Nicholas Reimer** - [nreimer](https://github.com/nreimer) - nicholas.reimer@stonybrook.edu
-	* Wrote algorithm for generating typos using the typo-generation model #5 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
-	* Created a way for the server to assign URLs to all running clients concurrently. 
-	* Worked on creating a connection between server and client(Master Node and Worker Node) with Java RMI.
-	* Created the AdjacencyKeys.java file, which generates the map of adjacent keys.
-	* Although this did not make it into the final version of our project, connected the server to MongoDB to save results from the Worker Nodes(Instead results from Worker Nodes were saved in files by the server).
+* **Hye-Jun Jeong** - [HyejunJeong](https://github.com/HyejunJeong)
+    * Wrote algorithms for generating typos using the typo-generation models #1 and  #2 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+    * Crawled typo URLs and get a page source and a screenshot.  
+    * Transferred resulting images and HTML scripts from the clients to the server.  
+    * Generated old and new results as ``report.html`` to the web dashboard.  
+* **Myungsuk (Jay) Moon** - [msukmoon](https://github.com/msukmoon) - jaymoon9876@gmail.com
+    * Wrote algorithm for generating typos using the typo-generation model #3 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+    * Made the web interface by using the JavaServer Pages (JSP). Received the user input and then dynamically returned the result.
+    * Made the distributed system by using Java Remote Method Invocation (Java RMI). Registered and deregistered clients using their uniquely generated IDs on the server. Made the queue of URLs on the server to be remotely accessed by multiple clients.
+    * Set up the VirtualBox appliance for running the clients.
+* **Nicholas Reimer** - [nreimer](https://github.com/nreimer)
+    * Wrote algorithm for generating typos using the typo-generation model #5 from the Section 3.1 of this [paper](https://www.usenix.org/legacy/event/sruti06/tech/full_papers/wang/wang.pdf)
+    * Created a way for the server to assign URLs to all running clients concurrently. 
+    * Worked on creating a connection between server and client (Master Node and Worker Node) with Java RMI.
+    * Created the AdjacencyKeys.java file, which generates the map of adjacent keys.
+    * Although this did not make it into the final version of our project, connected the server to MongoDB to save results from the Worker Nodes (Instead results from Worker Nodes were saved in files by the server).
